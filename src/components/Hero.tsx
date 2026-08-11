@@ -23,12 +23,6 @@ const NAME = 'SUKHMANI'.split('')
 // journey, and only goes as the hero itself scrolls out.
 // ————————————————————————————————————————————————————————————
 
-const BEATS: [number, number][] = [
-  [0.26, 0.5],
-  [0.5, 0.74],
-  [0.74, 1],
-]
-
 // Piecewise-linear ramp, clamped at both ends.
 //
 // IMPORTANT: these are *function* transforms rather than
@@ -49,6 +43,12 @@ function ramp(stops: number[], values: number[]) {
     return values[values.length - 1]
   }
 }
+
+const BEATS: [number, number][] = [
+  [0.26, 0.5],
+  [0.5, 0.74],
+  [0.74, 1],
+]
 
 function useBeat(p: MotionValue<number>, from: number, to: number) {
   const inEnd = from + 0.07
@@ -167,7 +167,7 @@ export default function Hero({ started }: { started: boolean }) {
   const figScale = useTransform(p, ramp([0.03, 0.13, 0.32], [0.95, 1, 0.88]))
 
   // — the melt: starts under the closing beat, not after it —
-  const meltProgress = useTransform(p, ramp([0.72, 1], [0, 1]))
+  // (the melt maps its own 0.72→1 window internally, from the raw scroll value)
 
   // Reduced motion: no journey, no scroll dependency — one static statement.
   if (reduced) {
@@ -276,7 +276,7 @@ export default function Hero({ started }: { started: boolean }) {
         </div>
 
         {/* liquid melt — rises under the closing beat */}
-        <BlobMorph progress={meltProgress} />
+        <BlobMorph triggerRef={wrapRef} from={0.72} to={1} />
 
         {/* availability pill */}
         <motion.div style={{ opacity: chromeOpacity }} className="absolute left-[3%] md:left-[6%] bottom-[8%] z-40">

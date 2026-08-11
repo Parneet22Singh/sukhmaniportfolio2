@@ -1,5 +1,4 @@
 import { useEffect, useRef } from 'react'
-import { type MotionValue } from 'framer-motion'
 
 // ── procedural liquid ────────────────────────────────────────────────
 // Generated per-frame from a single progress value p (0→1), so motion is
@@ -44,16 +43,24 @@ function fill(pts: [number, number][], closeY: number) {
 function pool(p: number, lag = 0, ampBoost = 1) {
   const pl = clamp01(p - lag)
   const e = easeInOut(pl)
-  const base = lerp(1160, 210, e) // surface: off-screen (below) → near top
+
+  // Final stretch floods past the top of the frame. Without this the surface
+  // tops out around y≈210 and the upper fifth of the hero never gets covered,
+  // so the closing beat and the masthead stay visible through the "melt".
+  const flood = clamp01((pl - 0.7) / 0.3)
+  const fe = flood * flood * (3 - 2 * flood) // smoothstep
+  const calm = 1 - fe // surface flattens out as it floods to a solid fill
+
+  const base = lerp(1160, 210, e) - 540 * fe
   const tendrils: [number, number][] = [[300, 250], [640, 320], [910, 200]]
   const pts: [number, number][] = []
   const N = 18
   for (let i = 0; i <= N; i++) {
     const x = -60 + (1120 / N) * i
     let y = base
-    y -= (26 + 52 * pl) * ampBoost * Math.sin(i * 0.9 + 0.3)
-    y -= (12 + 26 * pl) * ampBoost * Math.sin(i * 2.3 + 1.1)
-    for (const [cx, h] of tendrils) y -= h * pl * ampBoost * gauss(x, cx, 95)
+    y -= (26 + 52 * pl) * ampBoost * calm * Math.sin(i * 0.9 + 0.3)
+    y -= (12 + 26 * pl) * ampBoost * calm * Math.sin(i * 2.3 + 1.1)
+    for (const [cx, h] of tendrils) y -= h * pl * ampBoost * calm * gauss(x, cx, 95)
     pts.push([x, y])
   }
   return fill(pts, 1160)
@@ -79,7 +86,19 @@ function curtain(p: number) {
   return fill(pts, -300)
 }
 
-export default function BlobMorph({ progress }: { progress: MotionValue<number> }) {
+// Driven from the trigger element's own geometry on a rAF loop rather than
+// from a Framer MotionValue. Subscribing to a motion value proved unreliable
+// here: derived values (useTransform) are only recomputed while bound to a
+// motion element's `style`, and the melt sat frozen at its resting shape. The
+// element's bounding box is the ground truth and costs one read per frame.
+export default function BlobMorph({
+  triggerRef, from = 0, to = 1,
+}: {
+  triggerRef: React.RefObject<HTMLElement | null>
+  /** window, as a fraction of the trigger's sticky scroll range, over which the melt runs */
+  from?: number
+  to?: number
+}) {
   const backRef = useRef<SVGPathElement>(null)
   const frontRef = useRef<SVGPathElement>(null)
   const curtainRef = useRef<SVGPathElement>(null)
@@ -87,21 +106,41 @@ export default function BlobMorph({ progress }: { progress: MotionValue<number> 
   useEffect(() => {
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
 
-    const render = (t: number) => {
-      const p = clamp01(t)
+    let raf = 0
+    let prev = -1
+
+    const tick = () => {
+      raf = requestAnimationFrame(tick)
+      const el = triggerRef.current
+      if (!el) return
+
+      const range = el.offsetHeight - window.innerHeight
+      if (range <= 0) return
+      // -rect.top is how far we've scrolled into the sticky range
+      const scrolled = -el.getBoundingClientRect().top
+      const overall = clamp01(scrolled / range)
+      const p = clamp01((overall - from) / (to - from))
+
+      // Deliberately NOT skipping unchanged frames. React re-renders reset `d`
+      // back to the resting value baked into the JSX; a "has p changed?" guard
+      // latches after the first write and the melt then never recovers from
+      // that clobber. Only a genuine rest state is worth skipping.
+      if (p === 0 && prev === 0) return
+      prev = p
+
       backRef.current?.setAttribute('d', pool(p, 0.08, 0.9))
       frontRef.current?.setAttribute('d', pool(p, 0, 1))
       // the curtain shape only changes while extending; after that it's static
       if (p < 0.45) curtainRef.current?.setAttribute('d', curtain(p))
     }
 
-    render(progress.get())
-    return progress.on('change', render)
-  }, [progress])
+    raf = requestAnimationFrame(tick)
+    return () => cancelAnimationFrame(raf)
+  }, [triggerRef, from, to])
 
   return (
     // pool + curtain in one svg; clipped to the hero and scrolls away with it
-    <div className="absolute inset-0 z-[35] pointer-events-none overflow-hidden" aria-hidden>
+    <div className="absolute inset-0 z-[60] pointer-events-none overflow-hidden" aria-hidden>
       <svg viewBox="0 0 1000 1000" preserveAspectRatio="none" className="absolute inset-0 w-full h-full">
         <defs>
           {/* ONE gradient for both flows, in user space across the full viewBox.

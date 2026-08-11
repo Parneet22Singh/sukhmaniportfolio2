@@ -2,7 +2,6 @@ import PageShell from '../components/PageShell'
 import About from '../components/About'
 import Experience from '../components/Experience'
 import Skills from '../components/Skills'
-import Media from '../components/Media'
 
 export default function AboutPage() {
   return (
@@ -15,7 +14,6 @@ export default function AboutPage() {
       <About />
       <Experience />
       <Skills />
-      <Media />
     </PageShell>
   )
 }

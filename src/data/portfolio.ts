@@ -115,49 +115,15 @@ export const bottlenecks = [
 ]
 
 // Capability areas — deliberately wider than "marketing".
+// Capability areas — one catchy line each, nothing more. A reader deciding
+// whether to call should get the whole practice in six glances.
 export const capabilities = [
-  {
-    n: '01',
-    area: 'Growth & Go-to-Market',
-    lede: 'Where the growth actually comes from',
-    body: 'Diagnosing the real constraint on growth, sizing the opportunities worth chasing, and building the go-to-market plan that gets there — including the parts that are not marketing.',
-    tags: ['Growth diagnosis', 'GTM strategy', 'Market entry', 'Pricing input'],
-  },
-  {
-    n: '02',
-    area: 'Brand & Narrative',
-    lede: 'One story, told the same way everywhere',
-    body: 'Positioning built from consumer intelligence rather than opinion, a messaging framework the whole company can use, and governance that holds it together across markets, agencies and channels.',
-    tags: ['Positioning', 'Messaging frameworks', 'Brand governance', 'Thought leadership'],
-  },
-  {
-    n: '03',
-    area: 'Demand & Pipeline',
-    lede: 'Attention that converts into revenue',
-    body: 'Integrated campaigns across digital, OOH, influencer, social and events — built backwards from a pipeline target rather than forwards from a creative idea.',
-    tags: ['Integrated campaigns', 'SEO / SEM', 'Performance', 'Lead generation'],
-  },
-  {
-    n: '04',
-    area: 'Teams & Operating Structure',
-    lede: 'The org chart is part of the problem',
-    body: 'Structuring in-house teams and agency ecosystems so work ships: who owns what, which capability belongs inside, what to buy, and how the handoffs between marketing, sales and CRM actually work.',
-    tags: ['Team design', 'Agency management', 'Vendor selection', 'Sales alignment'],
-  },
-  {
-    n: '05',
-    area: 'Measurement & Decisions',
-    lede: 'Numbers leadership can act on',
-    body: 'Attribution wired to pipeline, MIS reporting and dashboards that get read, and a decision rhythm where the next quarter’s budget follows evidence instead of the loudest advocate.',
-    tags: ['Attribution', 'Dashboards & MIS', 'ROI analysis', 'Testing'],
-  },
-  {
-    n: '06',
-    area: 'Reputation & Risk',
-    lede: 'What people say when you are not in the room',
-    body: 'Online reputation management as an operating discipline — monitoring, response protocols, and the escalation paths that keep a bad week from becoming a bad year.',
-    tags: ['ORM', 'Crisis response', 'Review ecosystems', 'Community'],
-  },
+  { n: '01', area: 'Growth & Go-to-Market', line: 'Find the constraint before spending another rupee.' },
+  { n: '02', area: 'Brand & Narrative', line: 'One story, told the same way in every market.' },
+  { n: '03', area: 'Demand & Pipeline', line: 'Attention is cheap. Pipeline is the point.' },
+  { n: '04', area: 'Teams & Structure', line: 'Sometimes the fix is the org chart, not the ad.' },
+  { n: '05', area: 'Measurement & Decisions', line: "If you can't prove it, you can't fund it." },
+  { n: '06', area: 'Reputation & Risk', line: "Own what they say when you're not in the room." },
 ]
 
 // How an engagement runs, start to finish.

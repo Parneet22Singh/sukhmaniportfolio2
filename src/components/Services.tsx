@@ -157,30 +157,38 @@ export default function Services() {
           </motion.h3>
         </Moment>
 
-        <Moment className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {capabilities.map((c) => (
-            <motion.article
+        {/* Six lines, nothing else. The area name is a whisper; the line does
+            the work and is sized to be read from across the room. */}
+        <Moment>
+          {capabilities.map((c, i) => (
+            <motion.div
               key={c.area}
               variants={child}
               data-cursor="hover"
-              className="liquid-glass rounded-2xl p-7 flex flex-col"
+              className="group relative border-t border-ivory/10 last:border-b py-8 md:py-11"
             >
-              <span className="font-display text-fog/45 text-sm tabular-nums">{c.n}</span>
-              <h4
-                className="mt-4 font-display font-semibold text-ivory"
-                style={{ fontSize: 'clamp(1.15rem, 1.6vw, 1.45rem)', letterSpacing: '-0.02em', lineHeight: 1.15 }}
+              <span
+                className="absolute left-0 top-0 h-px w-0 bg-gold transition-all duration-[900ms] ease-out group-hover:w-full"
+                aria-hidden
+              />
+              <div
+                className="flex flex-col md:flex-row md:items-baseline md:gap-10"
+                style={{ paddingLeft: `${(i % 3) * 3}vw` }}
               >
-                {c.area}
-              </h4>
-              <p className="mt-2.5 text-fog text-sm leading-snug flex-1">{c.lede}.</p>
-              <div className="mt-6 flex flex-wrap gap-2">
-                {c.tags.map((t) => (
-                  <span key={t} className="label !text-[8px] !text-ivory/55 border border-ivory/12 rounded-full px-2.5 py-1">
-                    {t}
+                <div className="flex items-baseline gap-4 md:w-[300px] shrink-0">
+                  <span className="font-display text-fog/35 text-sm tabular-nums">{c.n}</span>
+                  <span className="label !text-[9px] group-hover:!text-gold transition-colors duration-500">
+                    {c.area}
                   </span>
-                ))}
+                </div>
+                <p
+                  className="mt-4 md:mt-0 font-display font-medium text-ivory/90 group-hover:text-gold transition-colors duration-500"
+                  style={{ fontSize: 'clamp(1.5rem, 3.2vw, 2.9rem)', letterSpacing: '-0.03em', lineHeight: 1.06 }}
+                >
+                  {c.line}
+                </p>
               </div>
-            </motion.article>
+            </motion.div>
           ))}
         </Moment>
       </div>

@@ -4,6 +4,7 @@ import Preloader from './components/Preloader'
 import Hero from './components/Hero'
 import IntroStrip from './components/IntroStrip'
 import BottleneckTrack from './components/BottleneckTrack'
+import Media from './components/Media'
 import ExploreCards from './components/ExploreCards'
 import Contact from './components/Contact'
 
@@ -20,6 +21,8 @@ export default function Home() {
       <Hero started={started} />
       <IntroStrip />
       <BottleneckTrack />
+      {/* the dismantling brain — moved here from /about */}
+      <Media />
       <ExploreCards />
       <Contact />
     </div>

@@ -13,14 +13,14 @@ import Atmosphere from './components/Atmosphere'
 import Aurora from './components/Aurora'
 import Home from './App.tsx'
 
-const Capabilities = lazy(() => import('./pages/Capabilities'))
-const Approach = lazy(() => import('./pages/Approach'))
-const AboutPage = lazy(() => import('./pages/AboutPage'))
-
 const OOHCampaign = lazy(() => import('./pages/OOHCampaign'))
 const ParkingTicket = lazy(() => import('./pages/ParkingTicket'))
 const MothersDay = lazy(() => import('./pages/MothersDay'))
 const RaastaRoyal = lazy(() => import('./pages/RaastaRoyal'))
+const Capabilities = lazy(() => import('./pages/Capabilities'))
+const Approach = lazy(() => import('./pages/Approach'))
+const AboutPage = lazy(() => import('./pages/AboutPage'))
+
 
 // Buttery inertia scroll (lerp 0.1), disabled for reduced-motion users.
 function SmoothScroll() {
