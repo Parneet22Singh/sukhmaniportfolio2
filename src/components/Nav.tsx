@@ -87,15 +87,6 @@ export default function Nav() {
 
           {/* Desktop */}
           <div className="hidden md:flex items-center gap-8">
-            {NAV.map((a) => (
-              <Link
-                key={a.to}
-                to={a.to}
-                className={`label u-link transition-colors ${pathname === a.to ? '!text-gold' : '!text-ivory/60 hover:!text-ivory'}`}
-              >
-                <Scramble text={a.label} />
-              </Link>
-            ))}
             {/* Campaigns dropdown */}
             <div className="relative" onMouseEnter={openDrop} onMouseLeave={closeDrop}>
               <button onClick={() => setDrop((v) => !v)} className="label u-link !text-ivory/60 hover:!text-ivory transition-colors">
@@ -132,6 +123,15 @@ export default function Nav() {
                 )}
               </AnimatePresence>
             </div>
+            {NAV.map((a) => (
+              <Link
+                key={a.to}
+                to={a.to}
+                className={`label u-link transition-colors ${pathname === a.to ? '!text-gold' : '!text-ivory/60 hover:!text-ivory'}`}
+              >
+                <Scramble text={a.label} />
+              </Link>
+            ))}
             <button
               onClick={goToContact}
               className="label-gold border border-gold/40 rounded-full px-5 py-2.5 hover:bg-gold hover:!text-midnight transition-all duration-300"
