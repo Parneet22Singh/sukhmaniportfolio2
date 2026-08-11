@@ -1,17 +1,20 @@
 import { useEffect, useRef } from 'react'
-import { gsap } from 'gsap'
-import { ScrollTrigger } from 'gsap/ScrollTrigger'
-
-gsap.registerPlugin(ScrollTrigger)
+import { type MotionValue } from 'framer-motion'
 
 // ── procedural liquid ────────────────────────────────────────────────
-// Generated per-frame from a single scroll progress p (0→1), so motion is
+// Generated per-frame from a single progress value p (0→1), so motion is
 // smooth and organic. Two flows in ONE svg that scrolls away with the hero:
 //   POOL    — rises from the bottom.
 //   CURTAIN — drips DOWN from the top ("leaks down"). Both are clipped to the
 //             hero and scroll out with it, so nothing bleeds over the next
 //             section and there's no fixed overlay to cause a repaint.
+//
+// Progress is supplied by the caller as a MotionValue rather than being wired
+// to its own ScrollTrigger. The hero already owns a precise scroll progress,
+// and driving the melt from it is the only way to land the rise *while the
+// closing beat is still on screen* instead of after it has faded out.
 
+const clamp01 = (v: number) => (v < 0 ? 0 : v > 1 ? 1 : v)
 const lerp = (a: number, b: number, t: number) => a + (b - a) * t
 const easeInOut = (p: number) =>
   p < 0.5 ? 4 * p * p * p : 1 - Math.pow(-2 * p + 2, 3) / 2
@@ -39,7 +42,7 @@ function fill(pts: [number, number][], closeY: number) {
 
 // POOL surface — viewBox 1000×1000. `lag` trails a back layer.
 function pool(p: number, lag = 0, ampBoost = 1) {
-  const pl = gsap.utils.clamp(0, 1, p - lag)
+  const pl = clamp01(p - lag)
   const e = easeInOut(pl)
   const base = lerp(1160, 210, e) // surface: off-screen (below) → near top
   const tendrils: [number, number][] = [[300, 250], [640, 320], [910, 200]]
@@ -56,13 +59,13 @@ function pool(p: number, lag = 0, ampBoost = 1) {
   return fill(pts, 1160)
 }
 
-// CURTAIN edge — viewBox 1000×1000 (fixed overlay). Drips DOWN; narrow
-// gaussians = tongues. The drips extend downward once (no retract) and then
-// dissolve via opacity, so it reads as a genuine downward melt.
+// CURTAIN edge — viewBox 1000×1000. Drips DOWN; narrow gaussians = tongues.
+// The drips extend downward once (no retract) and then dissolve via opacity,
+// so it reads as a genuine downward melt.
 function curtain(p: number) {
-  const g = gsap.utils.clamp(0, 1, p / 0.42) // extend down, done by ~p0.42
+  const g = clamp01(p / 0.42) // extend down, done by ~p0.42
   const e = easeInOut(g)
-  const gd = Math.pow(Math.sin(g * Math.PI / 2), 0.7) // drip length, front-loaded
+  const gd = Math.pow(Math.sin((g * Math.PI) / 2), 0.7) // drip length, front-loaded
   const base = lerp(-280, 150, e)
   const drips: [number, number][] = [[150, 420], [400, 600], [650, 460], [880, 610], [1010, 420]]
   const pts: [number, number][] = []
@@ -76,60 +79,46 @@ function curtain(p: number) {
   return fill(pts, -300)
 }
 
-export default function BlobMorph({ triggerRef }: { triggerRef: React.RefObject<HTMLElement | null> }) {
+export default function BlobMorph({ progress }: { progress: MotionValue<number> }) {
   const backRef = useRef<SVGPathElement>(null)
   const frontRef = useRef<SVGPathElement>(null)
   const curtainRef = useRef<SVGPathElement>(null)
 
   useEffect(() => {
-    if (!triggerRef.current) return
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
 
-    const ctx = gsap.context(() => {
-      const state = { t: 0 }
-      gsap.to(state, {
-        t: 1,
-        ease: 'none',
-        scrollTrigger: {
-          trigger: triggerRef.current,
-          start: 'top top',
-          end: '+=115%',
-          scrub: 0.6,
-        },
-        onUpdate: () => {
-          const p = state.t
-          backRef.current?.setAttribute('d', pool(p, 0.08, 0.9))
-          frontRef.current?.setAttribute('d', pool(p, 0, 1))
-          // curtain shape only changes while extending (p < 0.45); after that
-          // it's static and just scrolls out with the hero
-          if (p < 0.45) curtainRef.current?.setAttribute('d', curtain(p))
-        },
-      })
-    })
+    const render = (t: number) => {
+      const p = clamp01(t)
+      backRef.current?.setAttribute('d', pool(p, 0.08, 0.9))
+      frontRef.current?.setAttribute('d', pool(p, 0, 1))
+      // the curtain shape only changes while extending; after that it's static
+      if (p < 0.45) curtainRef.current?.setAttribute('d', curtain(p))
+    }
 
-    return () => ctx.revert()
-  }, [triggerRef])
+    render(progress.get())
+    return progress.on('change', render)
+  }, [progress])
 
   return (
     // pool + curtain in one svg; clipped to the hero and scrolls away with it
-    <div className="absolute inset-0 z-[25] pointer-events-none overflow-hidden" aria-hidden>
+    <div className="absolute inset-0 z-[35] pointer-events-none overflow-hidden" aria-hidden>
       <svg viewBox="0 0 1000 1000" preserveAspectRatio="none" className="absolute inset-0 w-full h-full">
         <defs>
-          <linearGradient id="poolGrad" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stopColor="var(--lavender)" />
-            <stop offset="55%" stopColor="var(--violet)" />
-            <stop offset="100%" stopColor="var(--coral)" />
-          </linearGradient>
-          <linearGradient id="curtainGrad" x1="0" y1="0" x2="0" y2="1">
+          {/* ONE gradient for both flows, in user space across the full viewBox.
+              Colour is therefore a function of absolute height rather than of
+              each shape's own box, so the curtain dripping down and the pool
+              rising up read as the same material meeting in the middle
+              instead of two differently-tinted blobs. */}
+          <linearGradient id="meltGrad" x1="0" y1="0" x2="0" y2="1000" gradientUnits="userSpaceOnUse">
             <stop offset="0%" stopColor="var(--violet)" />
             <stop offset="100%" stopColor="var(--lavender)" />
           </linearGradient>
         </defs>
         {/* pool — rises from the bottom */}
-        <path ref={backRef} d={pool(0, 0.08, 0.9)} fill="var(--coral)" opacity={0.6} />
-        <path ref={frontRef} d={pool(0, 0, 1)} fill="url(#poolGrad)" opacity={0.97} />
-        {/* curtain — drips down from the top */}
-        <path ref={curtainRef} d={curtain(0)} fill="url(#curtainGrad)" opacity={0.92} />
+        <path ref={backRef} d={pool(0, 0.08, 0.9)} fill="var(--violet)" opacity={0.45} />
+        <path ref={frontRef} d={pool(0, 0, 1)} fill="url(#meltGrad)" opacity={0.97} />
+        {/* curtain — drips down from the top, same fill */}
+        <path ref={curtainRef} d={curtain(0)} fill="url(#meltGrad)" opacity={0.97} />
       </svg>
     </div>
   )

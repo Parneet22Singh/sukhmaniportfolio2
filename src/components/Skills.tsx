@@ -22,7 +22,7 @@ export default function Skills() {
 
   return (
     <section className="relative py-[10vh]">
-      <p className="label text-center mb-12">Core Competencies</p>
+      <p className="label text-center mb-12">What I bring to the table</p>
       {row(skills.slice(0, 7))}
       {row(skills.slice(7), true)}
       <div className="border-t border-ivory/10" />

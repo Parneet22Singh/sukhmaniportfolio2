@@ -43,9 +43,9 @@ export default function About() {
               className="font-display font-semibold text-ivory"
               style={{ fontSize: 'clamp(2.8rem, 6.5vw, 6.5rem)', lineHeight: 1, letterSpacing: '-0.03em' }}
             >
-              Most brands{' '}
+              Most teams optimise{' '}
               <span className="relative inline-block whitespace-nowrap">
-                blend in.
+                the campaign.
                 <svg className="absolute left-0 top-1/2 w-full h-[0.12em] -translate-y-1/2 overflow-visible" viewBox="0 0 100 2" preserveAspectRatio="none" aria-hidden>
                   <motion.line
                     x1="0" y1="1" x2="100" y2="1"
@@ -66,12 +66,14 @@ export default function About() {
               className="font-display font-medium text-ivory"
               style={{ fontSize: 'clamp(1.7rem, 3vw, 2.9rem)', lineHeight: 1.08, letterSpacing: '-0.02em' }}
             >
-              I make them <span className="text-gold">impossible to ignore.</span>
+              The problem is almost always <span className="text-gold">further upstream.</span>
             </h3>
           </Reveal>
           <Reveal delay={0.4}>
-            <p className="mt-8 max-w-[400px] text-fog leading-relaxed">
-              In a sea of sameness, only the brave stand out. Nine years of integrated campaigns across India and the Middle East — strategic thinking, obsessive craft, and work that commands attention and drives action.
+            <p className="mt-8 max-w-[420px] text-fog leading-relaxed">
+              Nine years running growth across India and the Middle East taught me that the brief is rarely the
+              problem. I work back from the number to find where it actually breaks — then fix that, and build the
+              campaign the business needed in the first place.
             </p>
           </Reveal>
         </div>

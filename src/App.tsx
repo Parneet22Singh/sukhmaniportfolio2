@@ -2,14 +2,14 @@ import { useState } from 'react'
 import Nav from './components/Nav'
 import Preloader from './components/Preloader'
 import Hero from './components/Hero'
-import About from './components/About'
-import Experience from './components/Experience'
-import Services from './components/Services'
-import SelectedWork from './components/SelectedWork'
-import Skills from './components/Skills'
-import Media from './components/Media'
+import IntroStrip from './components/IntroStrip'
+import BottleneckTrack from './components/BottleneckTrack'
+import ExploreCards from './components/ExploreCards'
 import Contact from './components/Contact'
 
+// The homepage is an introduction, not the whole portfolio: who she is, the
+// problem she solves, and the doors into the detail. Everything that needs
+// room — capabilities, method, case studies, background — has its own route.
 export default function Home() {
   const [started, setStarted] = useState(false)
 
@@ -18,12 +18,9 @@ export default function Home() {
       <Preloader onDone={() => setStarted(true)} />
       <Nav />
       <Hero started={started} />
-      <About />
-      <Experience />
-      <Services />
-      <SelectedWork />
-      <Skills />
-      <Media />
+      <IntroStrip />
+      <BottleneckTrack />
+      <ExploreCards />
       <Contact />
     </div>
   )

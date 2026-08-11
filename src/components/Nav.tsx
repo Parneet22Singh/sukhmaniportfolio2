@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef, useCallback } from 'react'
-import { Link, useNavigate, useLocation } from 'react-router-dom'
+import { Link, useLocation } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
 import { campaignIndex, profile } from '../data/portfolio'
 
@@ -39,18 +39,17 @@ function Scramble({ text }: { text: string }) {
   )
 }
 
-const ANCHORS = [
-  { label: 'ABOUT', hash: '#about' },
-  { label: 'WORK', hash: '#work' },
-  { label: 'EXPERIENCE', hash: '#experience' },
-  { label: 'MEDIA', hash: '#media' },
+// Routes, not anchors — the site is a set of pages now, not one long scroll.
+const NAV = [
+  { label: 'CAPABILITIES', to: '/capabilities' },
+  { label: 'APPROACH', to: '/approach' },
+  { label: 'ABOUT', to: '/about' },
 ]
 
 export default function Nav() {
   const [open, setOpen] = useState(false)
   const [drop, setDrop] = useState(false)
   const [scrolled, setScrolled] = useState(false)
-  const navigate = useNavigate()
   const { pathname } = useLocation()
 
   // Dropdown open/close with a small close delay so moving the cursor
@@ -65,15 +64,11 @@ export default function Nav() {
     return () => window.removeEventListener('scroll', onScroll)
   }, [])
 
-  const goTo = (hash: string) => {
+  // Contact is the footer of every page, so this never needs to change route.
+  const goToContact = () => {
     setOpen(false)
     setDrop(false)
-    if (pathname !== '/') {
-      navigate('/')
-      setTimeout(() => document.querySelector(hash)?.scrollIntoView({ behavior: 'smooth' }), 400)
-    } else {
-      document.querySelector(hash)?.scrollIntoView({ behavior: 'smooth' })
-    }
+    document.querySelector('#contact')?.scrollIntoView({ behavior: 'smooth' })
   }
 
   return (
@@ -91,11 +86,15 @@ export default function Nav() {
           </Link>
 
           {/* Desktop */}
-          <div className="hidden md:flex items-center gap-9">
-            {ANCHORS.map((a) => (
-              <button key={a.hash} onClick={() => goTo(a.hash)} className="label u-link !text-ivory/60 hover:!text-ivory transition-colors">
+          <div className="hidden md:flex items-center gap-8">
+            {NAV.map((a) => (
+              <Link
+                key={a.to}
+                to={a.to}
+                className={`label u-link transition-colors ${pathname === a.to ? '!text-gold' : '!text-ivory/60 hover:!text-ivory'}`}
+              >
                 <Scramble text={a.label} />
-              </button>
+              </Link>
             ))}
             {/* Campaigns dropdown */}
             <div className="relative" onMouseEnter={openDrop} onMouseLeave={closeDrop}>
@@ -134,7 +133,7 @@ export default function Nav() {
               </AnimatePresence>
             </div>
             <button
-              onClick={() => goTo('#contact')}
+              onClick={goToContact}
               className="label-gold border border-gold/40 rounded-full px-5 py-2.5 hover:bg-gold hover:!text-midnight transition-all duration-300"
             >
               LET'S TALK
@@ -142,7 +141,7 @@ export default function Nav() {
           </div>
 
           {/* Mobile burger */}
-          <button className="md:hidden flex flex-col gap-1.5 p-2" aria-label="Menu" onClick={() => setOpen(!open)}>
+          <button className="lg:hidden flex flex-col gap-1.5 p-2" aria-label="Menu" onClick={() => setOpen(!open)}>
             <span className={`block w-6 h-px bg-ivory transition-transform duration-300 ${open ? 'translate-y-[3.5px] rotate-45' : ''}`} />
             <span className={`block w-6 h-px bg-ivory transition-transform duration-300 ${open ? '-translate-y-[3.5px] -rotate-45' : ''}`} />
           </button>
@@ -157,20 +156,33 @@ export default function Nav() {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.35 }}
-            className="fixed inset-0 z-[890] bg-midnight/97 backdrop-blur-2xl flex flex-col justify-center px-8 gap-2 md:hidden"
+            className="fixed inset-0 z-[890] bg-midnight/97 backdrop-blur-2xl flex flex-col justify-center px-8 gap-1 overflow-y-auto py-24 lg:hidden"
           >
-            {ANCHORS.map((a, i) => (
-              <motion.button
-                key={a.hash}
+            {NAV.map((a, i) => (
+              <motion.div
+                key={a.to}
                 initial={{ opacity: 0, y: 24 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.1 + i * 0.06 }}
-                onClick={() => goTo(a.hash)}
-                className="text-left font-display text-4xl text-ivory py-2"
               >
-                {a.label.charAt(0) + a.label.slice(1).toLowerCase()}
-              </motion.button>
+                <Link
+                  to={a.to}
+                  onClick={() => setOpen(false)}
+                  className="block text-left font-display text-3xl text-ivory py-1.5"
+                >
+                  {a.label.charAt(0) + a.label.slice(1).toLowerCase()}
+                </Link>
+              </motion.div>
             ))}
+            <motion.button
+              initial={{ opacity: 0, y: 24 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.1 + NAV.length * 0.06 }}
+              onClick={goToContact}
+              className="text-left font-display text-3xl text-gold py-1.5"
+            >
+              Let's talk
+            </motion.button>
             <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.4 }} className="mt-6 border-t border-ivory/10 pt-6">
               <p className="label-gold mb-3">Campaigns</p>
               {campaignIndex.map((c) => (

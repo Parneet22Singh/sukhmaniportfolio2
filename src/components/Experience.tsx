@@ -17,7 +17,7 @@ export default function Experience() {
           animate={inView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.7 }}
         >
-          Career
+          Track Record
         </motion.p>
         <motion.h2
           className="font-display font-semibold text-ivory mb-20"
@@ -26,7 +26,7 @@ export default function Experience() {
           animate={inView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.8, delay: 0.1 }}
         >
-          Nine years, <span className="text-gold">three chapters.</span>
+          Nine years, <span className="text-gold">three mandates.</span>
         </motion.h2>
 
         {experience.map((xp, i) => {
@@ -67,6 +67,12 @@ export default function Experience() {
                     className="overflow-hidden"
                   >
                     <div className="pb-10 md:pl-[4.5rem] max-w-4xl">
+                      <div className="mb-8 border-l-2 border-gold/40 pl-5">
+                        <p className="label-gold !text-[9px] mb-2">The mandate</p>
+                        <p className="text-ivory/85 leading-relaxed" style={{ fontSize: 'clamp(1rem, 1.4vw, 1.15rem)' }}>
+                          {xp.mandate}
+                        </p>
+                      </div>
                       {xp.teams.length > 0 && (
                         <div className="flex gap-2.5 mb-6 flex-wrap">
                           {xp.teams.map((t) => (

@@ -30,10 +30,20 @@ export default function Contact() {
           animate={inView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.9, delay: 0.1, ease: [0.22, 1, 0.36, 1] }}
         >
-          Let's turn your story
+          Tell me where
           <br />
-          into <span className="text-gold">business.</span>
+          it's <span className="text-gold">stuck.</span>
         </motion.h2>
+
+        <motion.p
+          className="mt-9 mx-auto max-w-[560px] text-fog leading-relaxed text-base md:text-lg"
+          initial={{ opacity: 0, y: 24 }}
+          animate={inView ? { opacity: 1, y: 0 } : {}}
+          transition={{ duration: 0.8, delay: 0.2 }}
+        >
+          One conversation is usually enough to tell whether the problem is the marketing or something underneath it.
+          No deck required — just what you are seeing and what you have already tried.
+        </motion.p>
 
         <motion.div
           initial={{ opacity: 0, y: 30 }}
@@ -66,7 +76,7 @@ export default function Contact() {
           animate={inView ? { opacity: 1 } : {}}
           transition={{ duration: 0.8, delay: 0.5 }}
         >
-          <span className="label">© 2026 Sukhmani — {profile.title}</span>
+          <span className="label">© 2026 Sukhmani — {profile.discipline}</span>
           <span className="label">Gurugram, India → Sydney, Australia</span>
         </motion.footer>
       </div>
