@@ -1,5 +1,6 @@
 import { useRef, type ReactNode } from 'react'
 import { motion, useInView, useScroll, useTransform } from 'framer-motion'
+import Marked from './Marked'
 import { bio, education, profile } from '../data/portfolio'
 
 const ease = [0.22, 1, 0.36, 1] as const
@@ -40,7 +41,7 @@ export default function About() {
         <div className="md:pr-20">
           <Reveal>
             <h2
-              className="font-display font-semibold text-ivory"
+              className="font-display font-semibold text-ink"
               style={{ fontSize: 'clamp(2.8rem, 6.5vw, 6.5rem)', lineHeight: 1, letterSpacing: '-0.03em' }}
             >
               Most teams optimise{' '}
@@ -49,7 +50,7 @@ export default function About() {
                 <svg className="absolute left-0 top-1/2 w-full h-[0.12em] -translate-y-1/2 overflow-visible" viewBox="0 0 100 2" preserveAspectRatio="none" aria-hidden>
                   <motion.line
                     x1="0" y1="1" x2="100" y2="1"
-                    stroke="#C9A96E" strokeWidth="1.6" vectorEffect="non-scaling-stroke"
+                    stroke="#FF5A1E" strokeWidth="1.6" vectorEffect="non-scaling-stroke"
                     initial={{ pathLength: 0 }}
                     animate={strikeInView ? { pathLength: 1 } : {}}
                     transition={{ duration: 1.1, delay: 0.6, ease: 'easeInOut' }}
@@ -63,15 +64,15 @@ export default function About() {
         <div className="md:pl-20 md:mt-20">
           <Reveal delay={0.25}>
             <h3
-              className="font-display font-medium text-ivory"
+              className="font-display font-medium text-ink"
               style={{ fontSize: 'clamp(1.7rem, 3vw, 2.9rem)', lineHeight: 1.08, letterSpacing: '-0.02em' }}
             >
               The problem is almost always <span className="text-gold">further upstream.</span>
             </h3>
           </Reveal>
           <Reveal delay={0.4}>
-            <p className="mt-8 max-w-[420px] text-fog leading-relaxed">
-              Nine years running growth across India and the Middle East taught me that the brief is rarely the
+            <p className="mt-8 max-w-[420px] text-ink/65 leading-relaxed">
+              Nine years running growth across India, the Middle East, Canada and Australia taught me that the brief is rarely the
               problem. I work back from the number to find where it actually breaks — then fix that, and build the
               campaign the business needed in the first place.
             </p>
@@ -87,7 +88,7 @@ export default function About() {
           <div>
             <Reveal>
               <blockquote
-                className="font-display font-medium text-ivory"
+                className="font-display font-medium text-ink"
                 style={{ fontSize: 'clamp(1.5rem, 2.6vw, 2.4rem)', lineHeight: 1.25, letterSpacing: '-0.02em' }}
               >
                 "{bio.pullQuote}"
@@ -96,7 +97,7 @@ export default function About() {
             <Reveal delay={0.15}>
               <div className="mt-10 space-y-5 max-w-[560px]">
                 {bio.paragraphs.map((p) => (
-                  <p key={p.slice(0, 24)} className="text-fog leading-relaxed">{p}</p>
+                  <p key={p.slice(0, 24)} className="text-ink/65 leading-relaxed"><Marked>{p}</Marked></p>
                 ))}
               </div>
             </Reveal>
@@ -106,7 +107,7 @@ export default function About() {
                   <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-gold opacity-60" />
                   <span className="relative inline-flex rounded-full h-2 w-2 bg-gold" />
                 </span>
-                {profile.statusBadge}
+                <Marked>{profile.statusBadge}</Marked>
               </p>
             </Reveal>
           </div>
@@ -116,17 +117,17 @@ export default function About() {
             <Reveal><p className="label-gold mb-6">Education</p></Reveal>
             {education.map((e, i) => (
               <Reveal key={e.degree} delay={0.1 + i * 0.1}>
-                <div className={`border-t border-ivory/10 py-6 ${e.highlighted ? 'border-t-gold/40' : ''}`}>
+                <div className={`border-t border-ink/15 py-6 ${e.highlighted ? 'border-t-gold/40' : ''}`}>
                   <div className="flex items-baseline justify-between gap-4">
-                    <h4 className={`font-display text-xl ${e.highlighted ? 'text-gold' : 'text-ivory'}`}>{e.degree}</h4>
+                    <h4 className={`font-display text-xl ${e.highlighted ? 'text-gold' : 'text-ink'}`}>{e.degree}</h4>
                     <span className="label whitespace-nowrap">{e.period}</span>
                   </div>
-                  <p className="mt-1.5 text-fog text-sm">{e.institution} · {e.location}</p>
+                  <p className="mt-1.5 text-ink/65 text-sm"><Marked>{`${e.institution} · ${e.location}`}</Marked></p>
                   {e.note && <p className="mt-2 label !text-gold">{e.note}</p>}
                 </div>
               </Reveal>
             ))}
-            <div className="border-t border-ivory/10" />
+            <div className="border-t border-ink/15" />
           </div>
         </div>
       </div>

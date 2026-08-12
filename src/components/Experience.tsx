@@ -20,7 +20,7 @@ export default function Experience() {
           Track Record
         </motion.p>
         <motion.h2
-          className="font-display font-semibold text-ivory mb-20"
+          className="font-display font-semibold text-ink mb-20"
           style={{ fontSize: 'clamp(2.4rem, 5vw, 5rem)', letterSpacing: '-0.03em', lineHeight: 1 }}
           initial={{ opacity: 0, y: 40 }}
           animate={inView ? { opacity: 1, y: 0 } : {}}
@@ -34,7 +34,7 @@ export default function Experience() {
           return (
             <motion.div
               key={xp.role}
-              className="border-t border-ivory/10 last:border-b"
+              className="border-t border-ink/15 last:border-b"
               initial={{ opacity: 0, y: 40 }}
               animate={inView ? { opacity: 1, y: 0 } : {}}
               transition={{ duration: 0.8, delay: 0.2 + i * 0.1 }}
@@ -43,9 +43,9 @@ export default function Experience() {
                 onClick={() => setOpen(isOpen ? -1 : i)}
                 className="w-full grid grid-cols-[auto_1fr_auto] items-baseline gap-6 md:gap-10 py-9 text-left group"
               >
-                <span className="font-display text-fog/50 text-sm md:text-base tabular-nums">0{i + 1}</span>
+                <span className="font-display text-ink/55 text-sm md:text-base tabular-nums">0{i + 1}</span>
                 <span>
-                  <span className={`block font-display font-medium transition-colors duration-300 ${isOpen ? 'text-gold' : 'text-ivory group-hover:text-gold'}`}
+                  <span className={`block font-display font-medium transition-colors duration-300 ${isOpen ? 'text-gold' : 'text-ink group-hover:text-gold'}`}
                     style={{ fontSize: 'clamp(1.3rem, 2.6vw, 2.3rem)', letterSpacing: '-0.02em', lineHeight: 1.1 }}>
                     {xp.role}
                   </span>
@@ -69,7 +69,7 @@ export default function Experience() {
                     <div className="pb-10 md:pl-[4.5rem] max-w-4xl">
                       <div className="mb-8 border-l-2 border-gold/40 pl-5">
                         <p className="label-gold !text-[9px] mb-2">The mandate</p>
-                        <p className="text-ivory/85 leading-relaxed" style={{ fontSize: 'clamp(1rem, 1.4vw, 1.15rem)' }}>
+                        <p className="text-ink/80 leading-relaxed" style={{ fontSize: 'clamp(1rem, 1.4vw, 1.15rem)' }}>
                           {xp.mandate}
                         </p>
                       </div>
@@ -82,7 +82,7 @@ export default function Experience() {
                       )}
                       <ul className="space-y-3.5">
                         {xp.points.map((p) => (
-                          <li key={p.slice(0, 24)} className="flex gap-4 text-fog leading-relaxed">
+                          <li key={p.slice(0, 24)} className="flex gap-4 text-ink/65 leading-relaxed">
                             <span className="text-gold mt-0.5 shrink-0">→</span>
                             {p}
                           </li>

@@ -23,7 +23,7 @@ export default function SpinningBadge({
       <div className="absolute inset-0 flex items-center justify-center">
         <span
           className="flex items-center justify-center rounded-full text-black"
-          style={{ width: size * 0.34, height: size * 0.34, background: 'linear-gradient(135deg,#E8D5B7,#C9A96E)' }}
+          style={{ width: size * 0.34, height: size * 0.34, background: '#FF5A1E' }}
         >
           <ArrowDownRight className="w-4 h-4" strokeWidth={2.2} />
         </span>

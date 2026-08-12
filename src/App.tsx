@@ -5,6 +5,7 @@ import Hero from './components/Hero'
 import IntroStrip from './components/IntroStrip'
 import BottleneckTrack from './components/BottleneckTrack'
 import Media from './components/Media'
+import FilmSeries from './components/FilmSeries'
 import ExploreCards from './components/ExploreCards'
 import Contact from './components/Contact'
 
@@ -23,6 +24,8 @@ export default function Home() {
       <BottleneckTrack />
       {/* the dismantling brain — moved here from /about */}
       <Media />
+      {/* TVCs + Meri Wali Home Story — both play in-page */}
+      <FilmSeries />
       <ExploreCards />
       <Contact />
     </div>

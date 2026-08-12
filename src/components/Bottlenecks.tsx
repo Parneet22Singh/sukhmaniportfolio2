@@ -21,7 +21,7 @@ function Row({ b, i }: { b: (typeof bottlenecks)[number]; i: number }) {
       initial={{ opacity: 0, y: 36 }}
       animate={inView ? { opacity: 1, y: 0 } : {}}
       transition={{ duration: 0.7, delay: i * 0.05, ease }}
-      className="group relative border-t border-ivory/10 last:border-b py-8 md:py-9 transition-colors duration-500 hover:bg-ivory/[0.015]"
+      className="group relative border-t border-ink/15 last:border-b py-8 md:py-9 transition-colors duration-500 hover:bg-ink/[0.03]"
     >
       <span
         className="absolute left-0 top-0 h-px w-0 bg-gold transition-all duration-700 ease-out group-hover:w-full"
@@ -30,18 +30,18 @@ function Row({ b, i }: { b: (typeof bottlenecks)[number]; i: number }) {
 
       <div className="grid gap-4 md:gap-10 md:grid-cols-[auto_1fr_1fr] md:items-baseline">
         <div className="flex items-baseline gap-4">
-          <span className="font-display text-fog/40 text-sm tabular-nums">{b.n}</span>
+          <span className="font-display text-sm tabular-nums opacity-40">{b.n}</span>
           <h3
-            className="font-display font-semibold text-ivory transition-colors duration-400 group-hover:text-gold"
+            className="font-display font-semibold transition-colors duration-400 group-hover:text-gold"
             style={{ fontSize: 'clamp(1.4rem, 2.4vw, 2.1rem)', letterSpacing: '-0.02em', lineHeight: 1.05 }}
           >
             {b.keyword}
           </h3>
         </div>
 
-        <p className="text-fog leading-snug md:pl-4">“{b.symptom}”</p>
+        <p className="leading-snug md:pl-4 opacity-70">“{b.symptom}”</p>
 
-        <p className="text-ivory/85 text-sm leading-snug md:border-l-2 md:border-gold/35 md:pl-5">
+        <p className="text-sm leading-snug md:border-l-2 md:border-gold md:pl-5">
           <span className="label-gold !text-[8px] block mb-1.5">The fix</span>
           {b.fix}
         </p>
@@ -55,7 +55,9 @@ export default function Bottlenecks() {
   const headInView = useInView(headRef, { once: true, margin: '-15% 0px' })
 
   return (
-    <section id="bottlenecks" className="relative py-[14vh] px-6 md:px-12 overflow-hidden">
+    // bone block: the diagnosis table is the one thing on this page a reader
+    // will actually scan line by line, so it gets the light surface
+    <section id="bottlenecks" className="block-bone relative py-[14vh] px-6 md:px-12 overflow-hidden">
       <div className="max-w-[1500px] mx-auto">
         <div ref={headRef} className="max-w-[760px] mb-[7vh]">
           <motion.p
@@ -67,7 +69,7 @@ export default function Bottlenecks() {
             The Diagnosis
           </motion.p>
           <motion.h2
-            className="font-display font-semibold text-ivory"
+            className="font-display font-semibold"
             style={{ fontSize: 'clamp(2.2rem, 5vw, 4.8rem)', letterSpacing: '-0.035em', lineHeight: 0.99 }}
             initial={{ opacity: 0, y: 40 }}
             animate={headInView ? { opacity: 1, y: 0 } : {}}
@@ -84,7 +86,7 @@ export default function Bottlenecks() {
         </div>
 
         <motion.p
-          className="mt-12 text-fog"
+          className="mt-12 opacity-70"
           initial={{ opacity: 0 }}
           whileInView={{ opacity: 1 }}
           viewport={{ once: true, margin: '-10% 0px' }}

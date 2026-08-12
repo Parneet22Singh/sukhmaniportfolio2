@@ -72,7 +72,7 @@ export default function BottleneckTrack() {
         >
           <p className="label mb-5">The Diagnosis</p>
           <h2
-            className="font-display font-semibold text-ivory"
+            className="font-display font-semibold"
             style={{ fontSize: 'clamp(2.2rem, 5vw, 4.6rem)', letterSpacing: '-0.035em', lineHeight: 1 }}
           >
             Where growth <span className="text-gold">gets stuck.</span>
@@ -82,26 +82,14 @@ export default function BottleneckTrack() {
         {/* ——— desktop: the rolling track ——— */}
         <div className="hidden md:block relative">
           <svg viewBox={`0 0 ${VB.w} ${VB.h}`} className="w-full h-auto overflow-visible" aria-hidden>
-            <defs>
-              <linearGradient id="btTrail" x1="0" y1="0" x2="1" y2="0">
-                <stop offset="0%" stopColor="#C9A96E" />
-                <stop offset="100%" stopColor="var(--violet)" />
-              </linearGradient>
-              <radialGradient id="btBall">
-                <stop offset="0%" stopColor="#FFD9A0" />
-                <stop offset="60%" stopColor="var(--violet)" />
-                <stop offset="100%" stopColor="#C2380C" />
-              </radialGradient>
-            </defs>
-
             {/* the track */}
-            <path ref={pathRef} d={CURVE} fill="none" stroke="rgba(245,240,234,0.14)" strokeWidth="2" strokeLinecap="round" />
+            <path ref={pathRef} d={CURVE} fill="none" stroke="rgba(18,18,18,0.16)" strokeWidth="2" strokeLinecap="round" />
             {/* the travelled portion */}
             <path
               ref={trailRef}
               d={CURVE}
               fill="none"
-              stroke="url(#btTrail)"
+              stroke="var(--violet)"
               strokeWidth="2.5"
               strokeLinecap="round"
               pathLength={1}
@@ -113,17 +101,17 @@ export default function BottleneckTrack() {
               <g key={i}>
                 <circle
                   cx={n.x} cy={n.y} r={active >= i ? 13 : 9}
-                  fill={active >= i ? 'rgba(255,90,30,0.16)' : 'transparent'}
-                  stroke={active >= i ? 'var(--violet)' : 'rgba(245,240,234,0.28)'}
+                  fill="none"
+                  stroke={active >= i ? 'var(--violet)' : 'rgba(18,18,18,0.3)'}
                   strokeWidth="1.6"
                   style={{ transition: 'all 0.45s cubic-bezier(0.22,1,0.36,1)' }}
                 />
-                <circle cx={n.x} cy={n.y} r="2.6" fill={active >= i ? '#C9A96E' : 'rgba(245,240,234,0.35)'}
+                <circle cx={n.x} cy={n.y} r="2.6" fill={active >= i ? 'var(--violet)' : 'rgba(18,18,18,0.38)'}
                   style={{ transition: 'fill 0.45s ease' }} />
                 {/* connector tick out to the label */}
                 <line
                   x1={n.x} y1={n.y} x2={n.x} y2={i % 2 === 0 ? n.y - 44 : n.y + 44}
-                  stroke={active >= i ? 'rgba(201,169,110,0.55)' : 'rgba(245,240,234,0.14)'}
+                  stroke={active >= i ? 'rgba(255,90,30,0.6)' : 'rgba(18,18,18,0.16)'}
                   strokeWidth="1"
                   style={{ transition: 'stroke 0.45s ease' }}
                 />
@@ -132,8 +120,8 @@ export default function BottleneckTrack() {
 
             {/* the ball */}
             <g ref={ballRef} transform="translate(40 72)">
-              <circle r="17" fill="rgba(255,90,30,0.16)" />
-              <circle r="9" fill="url(#btBall)" />
+              <circle r="17" fill="none" stroke="var(--violet)" strokeWidth="1" opacity="0.5" />
+              <circle r="9" fill="var(--violet)" />
             </g>
           </svg>
 
@@ -158,7 +146,7 @@ export default function BottleneckTrack() {
                 >
                   <p className={`label !text-[9px] mb-1.5 ${on ? '!text-gold' : ''}`}>{bottlenecks[i].n}</p>
                   <p
-                    className={`font-display font-semibold leading-none ${on ? 'text-ivory' : 'text-ivory/45'}`}
+                    className={`font-display font-semibold leading-none ${on ? 'text-ink' : 'text-ink/55'}`}
                     style={{ fontSize: 'clamp(0.95rem, 1.5vw, 1.45rem)', letterSpacing: '-0.02em' }}
                   >
                     {bottlenecks[i].keyword}
@@ -172,7 +160,7 @@ export default function BottleneckTrack() {
 
         {/* ——— mobile: same idea, vertical rail ——— */}
         <div className="md:hidden relative pl-8">
-          <div className="absolute left-[7px] top-2 bottom-2 w-px bg-ivory/12" aria-hidden />
+          <div className="absolute left-[7px] top-2 bottom-2 w-px bg-ink/15" aria-hidden />
           <motion.div
             className="absolute left-[7px] top-2 bottom-2 w-px bg-gold origin-top"
             style={{ scaleY: scrollYProgress }}
@@ -187,9 +175,9 @@ export default function BottleneckTrack() {
               viewport={{ once: true, margin: '-20% 0px' }}
               transition={{ duration: 0.55, delay: i * 0.05, ease }}
             >
-              <span className="absolute left-[-26px] top-[26px] w-2.5 h-2.5 rounded-full bg-gold ring-4 ring-midnight" aria-hidden />
+              <span className="absolute left-[-26px] top-[26px] w-2.5 h-2.5 rounded-full bg-gold ring-4 ring-bone" aria-hidden />
               <p className="label !text-[9px] !text-gold mb-1.5">{b.n}</p>
-              <p className="font-display font-semibold text-ivory text-xl leading-none">{b.keyword}</p>
+              <p className="font-display font-semibold text-ink text-xl leading-none">{b.keyword}</p>
               <p className="label !text-[8px] mt-2">{b.note}</p>
             </motion.div>
           ))}

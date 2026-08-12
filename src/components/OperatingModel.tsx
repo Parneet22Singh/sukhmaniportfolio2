@@ -24,7 +24,7 @@ function Step({ s, i }: { s: (typeof operatingModel.steps)[number]; i: number })
     >
       {/* node on the rail */}
       <span
-        className="absolute left-[-5px] md:left-[115px] top-1.5 w-2.5 h-2.5 rounded-full bg-gold ring-4 ring-midnight"
+        className="absolute left-[-5px] md:left-[115px] top-1.5 w-2.5 h-2.5 rounded-full bg-gold ring-4 ring-bone"
         aria-hidden
       />
 
@@ -35,12 +35,12 @@ function Step({ s, i }: { s: (typeof operatingModel.steps)[number]; i: number })
 
       <div className="mt-4 md:mt-0 md:pl-8">
         <h3
-          className="font-display font-semibold text-ivory"
+          className="font-display font-semibold"
           style={{ fontSize: 'clamp(1.5rem, 2.6vw, 2.3rem)', letterSpacing: '-0.02em', lineHeight: 1.05 }}
         >
           {s.title}
         </h3>
-        <p className="mt-4 max-w-[560px] text-fog leading-relaxed">{s.body}</p>
+        <p className="mt-4 max-w-[560px] leading-relaxed opacity-70">{s.body}</p>
       </div>
     </motion.div>
   )
@@ -57,7 +57,9 @@ export default function OperatingModel({ bare = false }: { bare?: boolean }) {
   const railScale = useTransform(scrollYProgress, [0, 1], [0, 1])
 
   return (
-    <section id="approach" className={`relative px-6 md:px-12 overflow-hidden ${bare ? 'pb-[16vh]' : 'py-[16vh]'}`}>
+    // bone block — the four movements are the page's spine, so they get the
+    // light surface and everything around them stays black
+    <section id="approach" className={`block-bone relative px-6 md:px-12 overflow-hidden ${bare ? 'pt-[10vh] pb-[16vh]' : 'py-[16vh]'}`}>
       <div className="max-w-[1200px] mx-auto">
         <div ref={headRef} className={`max-w-[760px] mb-[9vh] ${bare ? 'hidden' : ''}`}>
           <motion.p
@@ -69,7 +71,7 @@ export default function OperatingModel({ bare = false }: { bare?: boolean }) {
             {operatingModel.label}
           </motion.p>
           <motion.h2
-            className="font-display font-semibold text-ivory"
+            className="font-display font-semibold"
             style={{ fontSize: 'clamp(2.3rem, 5vw, 5rem)', letterSpacing: '-0.035em', lineHeight: 1 }}
             initial={{ opacity: 0, y: 40 }}
             animate={headInView ? { opacity: 1, y: 0 } : {}}
@@ -78,7 +80,7 @@ export default function OperatingModel({ bare = false }: { bare?: boolean }) {
             {operatingModel.heading}
           </motion.h2>
           <motion.p
-            className="mt-9 max-w-[600px] text-fog leading-relaxed text-base md:text-lg"
+            className="mt-9 max-w-[600px] leading-relaxed text-base md:text-lg opacity-70"
             initial={{ opacity: 0, y: 30 }}
             animate={headInView ? { opacity: 1, y: 0 } : {}}
             transition={{ duration: 0.8, delay: 0.22, ease }}
@@ -89,7 +91,7 @@ export default function OperatingModel({ bare = false }: { bare?: boolean }) {
 
         <div ref={railRef} className="relative">
           {/* the rail */}
-          <div className="absolute left-0 md:left-[120px] top-2 bottom-2 w-px bg-ivory/10" aria-hidden />
+          <div className="absolute left-0 md:left-[120px] top-2 bottom-2 w-px bg-ink/15" aria-hidden />
           <motion.div
             className="absolute left-0 md:left-[120px] top-2 bottom-2 w-px bg-gold origin-top"
             style={{ scaleY: railScale }}

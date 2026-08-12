@@ -41,7 +41,7 @@ export default function Preloader({ onDone }: { onDone: () => void }) {
           {/* seam glow that splits with the curtains */}
           <motion.div
             className="absolute inset-y-0 left-1/2 -translate-x-1/2 w-px"
-            style={{ background: 'linear-gradient(to bottom, transparent, #FF5A1F, transparent)' }}
+            style={{ background: '#FF5A1E' }}
             initial={{ opacity: 0, scaleY: 0 }}
             animate={{
               opacity: phase === 'part' ? 0 : 1,

@@ -1,6 +1,7 @@
 import { useRef } from 'react'
 import { motion, useInView } from 'framer-motion'
 import Magnetic from './Magnetic'
+import Marked from './Marked'
 import { profile } from '../data/portfolio'
 
 export default function Contact() {
@@ -10,8 +11,9 @@ export default function Contact() {
   return (
     <section
       id="contact"
-      className="relative pt-[18vh] pb-12 px-6 md:px-12 overflow-hidden"
-      style={{ background: 'radial-gradient(ellipse 80% 70% at 50% 40%, rgba(255,90,31,.28) 0%, rgba(255,176,32,.12) 45%, transparent 75%), #0E0D12' }}
+      /* The one dark block that closes every page, practice side and campaign
+         side alike — so the footer is the same object wherever you land. */
+      className="block-dark relative pt-[18vh] pb-12 px-6 md:px-12 overflow-hidden"
     >
       <div ref={ref} className="max-w-[1500px] mx-auto text-center">
         <motion.p
@@ -20,7 +22,7 @@ export default function Contact() {
           animate={inView ? { opacity: 1 } : {}}
           transition={{ duration: 0.7 }}
         >
-          {profile.statusBadge}
+          <Marked>{profile.statusBadge}</Marked>
         </motion.p>
 
         <motion.h2
@@ -60,11 +62,26 @@ export default function Contact() {
             </a>
           </Magnetic>
 
-          <div className="mt-12 flex items-center justify-center gap-4 flex-wrap">
-            <a href={`tel:${profile.phone.replace(/\s/g, '')}`} className="label border border-ivory/20 rounded-full px-6 py-3.5 !text-ivory/80 hover:border-gold hover:!text-gold transition-all duration-300">
-              {profile.phone}
-            </a>
-            <a href={profile.linkedin} target="_blank" rel="noopener noreferrer" className="label-gold border border-gold rounded-full px-6 py-3.5 hover:bg-gold hover:!text-midnight transition-all duration-300">
+          {/* Both numbers — she is reachable in either market through the move */}
+          <div className="mt-12 flex items-center justify-center gap-3 flex-wrap">
+            {profile.phones.map((ph) => (
+              <a
+                key={ph.number}
+                href={`tel:${ph.number.replace(/\s/g, '')}`}
+                className="group border border-ivory/20 px-6 py-3.5 hover:border-gold hover:bg-gold transition-colors duration-300"
+              >
+                <span className="label !text-[8px] block group-hover:!text-midnight/70 transition-colors">{ph.region}</span>
+                <span className="mt-1 block text-ivory/85 text-sm tabular-nums group-hover:text-midnight transition-colors">
+                  {ph.number}
+                </span>
+              </a>
+            ))}
+            <a
+              href={profile.linkedin}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="label-gold border border-gold px-6 py-3.5 hover:bg-gold hover:!text-midnight transition-colors duration-300 self-stretch flex items-center"
+            >
               LinkedIn ↗
             </a>
           </div>
@@ -77,7 +94,7 @@ export default function Contact() {
           transition={{ duration: 0.8, delay: 0.5 }}
         >
           <span className="label">© 2026 Sukhmani — {profile.discipline}</span>
-          <span className="label">Gurugram, India → Sydney, Australia</span>
+          <span className="label"><Marked>Gurugram, India → Sydney, Australia</Marked></span>
         </motion.footer>
       </div>
     </section>

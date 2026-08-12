@@ -27,7 +27,7 @@ export default function PageShell({
         <Link
           to="/"
           data-cursor="hover"
-          className="liquid-glass rounded-full px-4 py-2 inline-flex items-center gap-2 text-ivory/70 hover:text-ivory text-xs md:text-sm transition-colors"
+          className="liquid-glass rounded-full px-4 py-2 inline-flex items-center gap-2 text-ink/70 hover:text-ink text-xs md:text-sm transition-colors"
         >
           <ArrowLeft className="w-4 h-4" /> Home
         </Link>
@@ -44,7 +44,7 @@ export default function PageShell({
             {kicker}
           </motion.p>
           <motion.h1
-            className="font-display font-semibold text-ivory max-w-[15ch]"
+            className="font-display font-semibold text-ink max-w-[15ch]"
             style={{ fontSize: 'clamp(2.6rem, 7vw, 6.5rem)', letterSpacing: '-0.04em', lineHeight: 0.97 }}
             initial={{ opacity: 0, y: 40 }}
             animate={{ opacity: 1, y: 0 }}
@@ -54,7 +54,7 @@ export default function PageShell({
           </motion.h1>
           {lede && (
             <motion.p
-              className="mt-10 max-w-[620px] text-fog leading-relaxed text-base md:text-lg"
+              className="mt-10 max-w-[620px] text-ink/65 leading-relaxed text-base md:text-lg"
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.22, ease }}

@@ -34,25 +34,10 @@ export default function MarketingFlow() {
   return (
     <div
       ref={ref}
-      className="absolute inset-0 overflow-hidden"
-      style={{ background: 'linear-gradient(165deg, #17120f 0%, #0d0b0a 55%, #120e0c 100%)' }}
+      className="absolute inset-0 overflow-hidden bg-midnight"
       aria-hidden
     >
       <svg viewBox="0 0 320 440" preserveAspectRatio="xMidYMid meet" className="absolute inset-0 w-full h-full">
-        <defs>
-          <linearGradient id="mfBar" x1="0" y1="0" x2="1" y2="0">
-            <stop offset="0%" stopColor="var(--violet)" />
-            <stop offset="100%" stopColor="#FFB020" />
-          </linearGradient>
-          <radialGradient id="mfGlow" cx="0.5" cy="0.5" r="0.5">
-            <stop offset="0%" stopColor="rgba(255,90,30,0.30)" />
-            <stop offset="100%" stopColor="rgba(255,90,30,0)" />
-          </radialGradient>
-        </defs>
-
-        {/* ambient glow behind the narrative node */}
-        <circle cx={NODE.x} cy={NODE.y + 16} r="120" fill="url(#mfGlow)" />
-
         {/* faint measurement grid */}
         {Array.from({ length: 10 }).map((_, i) => (
           <line
@@ -119,11 +104,11 @@ export default function MarketingFlow() {
         >
           <rect
             x={NODE.x - 62} y={NODE.y - 16} width="124" height="32" rx="16"
-            fill="rgba(13,11,10,0.85)" stroke="var(--violet)" strokeWidth="1.2"
+            fill="var(--violet)" stroke="none"
           />
           <text
             x={NODE.x} y={NODE.y + 4}
-            fill="#f5f0ea" fontSize="8.5" letterSpacing="1.8"
+            fill="#121212" fontSize="8.5" letterSpacing="1.8"
             textAnchor="middle" fontFamily="inherit"
           >
             ONE NARRATIVE
@@ -153,7 +138,7 @@ export default function MarketingFlow() {
               </text>
               <rect x="20" y={y + 8} width="280" height="6" rx="3" fill="rgba(245,240,234,0.07)" />
               <motion.rect
-                x="20" y={y + 8} height="6" rx="3" fill="url(#mfBar)"
+                x="20" y={y + 8} height="6" rx="3" fill="var(--violet)"
                 initial={{ width: 0 }}
                 animate={inView ? { width: s.w } : undefined}
                 transition={{ duration: 0.9, delay: 1.3 + i * 0.15, ease: EASE }}

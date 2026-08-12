@@ -35,6 +35,10 @@ const ROUTES = [
   },
 ]
 
+// The four doors off the homepage. This was a full-bleed orange block and it
+// was far too loud — a whole viewport of #FF5A1E next to an orange-accented
+// site reads as a warning label, not a menu. Orange is now down to the kicker
+// and the arrow; the weight comes from the hairline grid and the ink hover.
 export default function ExploreCards() {
   return (
     <section className="relative px-6 md:px-12 py-[14vh]">
@@ -49,7 +53,8 @@ export default function ExploreCards() {
           Go deeper
         </motion.p>
 
-        <div className="grid gap-4 md:grid-cols-2">
+        {/* one hairline grid — no cards, no shadows */}
+        <div className="grid gap-px bg-ink/15 md:grid-cols-2">
           {ROUTES.map((r, i) => (
             <motion.div
               key={r.to}
@@ -61,20 +66,20 @@ export default function ExploreCards() {
               <Link
                 to={r.to}
                 data-cursor="hover"
-                className="group block liquid-glass rounded-[24px] p-8 md:p-10 h-full transition-transform duration-500 hover:-translate-y-1"
+                className="group card-invert block bg-bone text-ink p-8 md:p-10 h-full transition-colors duration-300 hover:bg-ink hover:text-bone"
               >
                 <div className="flex items-baseline justify-between gap-4">
-                  <span className="label !text-[9px] !text-gold/80">{r.kicker}</span>
-                  <span className="font-display text-fog/40 text-sm tabular-nums">{r.n}</span>
+                  <span className="label-gold !text-[9px]">{r.kicker}</span>
+                  <span className="font-display text-sm tabular-nums opacity-40">{r.n}</span>
                 </div>
                 <h3
-                  className="mt-6 font-display font-semibold text-ivory transition-colors duration-300 group-hover:text-gold"
+                  className="mt-6 font-display font-semibold"
                   style={{ fontSize: 'clamp(1.5rem, 2.6vw, 2.3rem)', letterSpacing: '-0.025em', lineHeight: 1.05 }}
                 >
                   {r.title}
                 </h3>
-                <p className="mt-5 text-fog text-sm leading-relaxed max-w-[46ch]">{r.blurb}</p>
-                <span className="mt-8 inline-flex items-center gap-2 label !text-ivory/60 group-hover:!text-gold transition-colors">
+                <p className="mt-5 text-sm leading-relaxed max-w-[46ch] opacity-70">{r.blurb}</p>
+                <span className="mt-8 inline-flex items-center gap-2 label !text-gold">
                   Open <span aria-hidden className="transition-transform duration-300 group-hover:translate-x-1">→</span>
                 </span>
               </Link>

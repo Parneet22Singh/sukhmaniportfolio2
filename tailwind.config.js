@@ -6,24 +6,32 @@ export default {
       colors: {
         // NOTE: token names kept stable across palette revisions so
         // components never need touching — only the hex values move.
+        //
+        // The palette is deliberately three flat colours: black, orange, bone.
+        // No gradient ramps, no in-between tints — a section is one of the three
+        // and the type on it is one of the other two.
         //   midnight/charcoal/warmdark = dark surfaces (bg → cards)
+        //   bone/ink = the LIGHT surface and the type that sits on it
         //   ivory = light text · fog = muted text · gold = primary accent
-        midnight: '#0D0B0A', // warm near-black — page base (Veronix)
-        charcoal: '#15110E', // warm dark — alt sections
-        warmdark: '#1C1712', // warm dark card
-        ivory: '#F5F0EA', // warm off-white — primary text
-        fog: '#9A9088', // warm muted gray — secondary text
+        midnight: '#0F0E0C', // warm flat black — the dark blocks & campaign base
+        charcoal: '#161412', // one step up — alt dark sections
+        warmdark: '#1D1A17', // flat dark card surface
+        bone: '#E8E0D2', // warm sand — the practice-side base surface
+        sand: '#DED5C4', // one step down from bone — hairline fills, alt bands
+        ink: '#17150F', // warm near-black — type on sand and on orange
+        ivory: '#F5F0EA', // off-white — primary text on the dark blocks
+        fog: '#8E8880', // muted — secondary text on the dark blocks
         gold: {
           DEFAULT: '#FF5A1E', // vivid orange — primary/dominant accent
-          light: '#FF8A4C', // lighter orange — hover/soft states
+          light: '#FF7A3D', // one step up — hover only, never a gradient stop
         },
-        // accent family (orange-forward warm dark theme)
-        lavender: '#FF8A4C', // light orange
-        mint: '#12B8A6', // teal (rare)
-        peach: '#FF5A1E', // orange
-        sky: '#4C8DFF', // blue (rare)
-        coral: '#FF3D6E', // pink-coral
-        sunny: '#FFB020', // amber
+        // legacy accent tokens, kept so campaign pages keep compiling
+        lavender: '#FF5A1E',
+        mint: '#12B8A6',
+        peach: '#FF5A1E',
+        sky: '#4C8DFF',
+        coral: '#FF3D6E',
+        sunny: '#FFB020',
       },
       fontFamily: {
         display: ['"Clash Display"', 'ui-sans-serif', 'system-ui', 'sans-serif'],

@@ -1,5 +1,5 @@
 import { useRef, useState, useEffect } from 'react'
-import { motion, useScroll, useTransform, type MotionValue } from 'framer-motion'
+import { motion, useScroll, useTransform, useMotionValueEvent, type MotionValue } from 'framer-motion'
 import BlobMorph from './BlobMorph'
 import { profile, heroJourney, stats } from '../data/portfolio'
 
@@ -16,11 +16,25 @@ const NAME = 'SUKHMANI'.split('')
 //
 //   p 0.00–0.14  SUKHMANI lifts from dead-centre into a masthead and shrinks
 //   p 0.03–0.32  the portrait fades up, holds, and clears the stage
-//   p 0.26–1.00  three beats carry the argument
-//   p 0.72–1.00  the melt rises — while the closing beat is still on screen
+//   p 0.24–1.00  three beats carry the argument
+//   p 0.86–1.00  the melt rises — once the closing beat is typed and read
+//
+// The beats sit UNDER the melt (z-30 against the melt's z-60), so the lava
+// genuinely drowns the copy rather than flowing behind it. The original
+// complaint — that beat 03 was never visible — was a timing problem, not a
+// stacking one: the melt used to start at 0.72 while beat 03 opened at 0.74,
+// so it was buried the instant it appeared. Beat 03 now opens at 0.70 and is
+// fully legible for the whole 0.77–0.88 stretch before the fill reaches it.
 //
 // SUKHMANI never leaves. It shrinks and holds at the top for the whole
 // journey, and only goes as the hero itself scrolls out.
+//
+// The beats are set deliberately AGAINST the masthead rather than with it.
+// Both used to be centred Clash Display at display size, which made the
+// argument read as a second helping of the name. They are now rust monospace
+// at roughly a fifth the size, left-aligned off the centre line, and they
+// TYPE themselves in as you scroll — with a blinking caret — rather than
+// fading in.
 // ————————————————————————————————————————————————————————————
 
 // Piecewise-linear ramp, clamped at both ends.
@@ -44,18 +58,67 @@ function ramp(stops: number[], values: number[]) {
   }
 }
 
+// Beat 03 gets the longest window of the three: a clear stretch on black from
+// 0.70, the melt arriving under it at 0.78, and it stays up at full opacity
+// through the flood so the closing line is the thing left standing on orange.
 const BEATS: [number, number][] = [
-  [0.26, 0.5],
-  [0.5, 0.74],
-  [0.74, 1],
+  [0.24, 0.48],
+  [0.48, 0.71],
+  [0.70, 1.0],
 ]
 
-function useBeat(p: MotionValue<number>, from: number, to: number) {
-  const inEnd = from + 0.07
-  const outStart = to - 0.06
-  const opacity = useTransform(p, ramp([from, inEnd, outStart, to], [0, 1, 1, 0]))
-  const y = useTransform(p, ramp([from, inEnd, outStart, to], [44, 0, 0, -36]))
-  return { opacity, y }
+// The melt holds off until the closing beat has finished typing AND had a
+// beat to be read. It used to start at 0.78, while beat 03 was still typing —
+// the curtain drips were coming down through the line before anyone had got
+// to the end of it.
+const MELT_FROM = 0.86
+
+const clamp01 = (v: number) => (v < 0 ? 0 : v > 1 ? 1 : v)
+const easeOut = (t: number) => 1 - Math.pow(1 - t, 3)
+
+// ——— the statement, typed ———
+//
+// A typewriter, but driven by scroll position rather than setTimeout. A timed
+// version would type itself on mount regardless of where the reader actually
+// is, and all three beats would run at once behind a journey that has not
+// reached them yet. Here the character count is a function of `p`: scroll
+// forward and it types, scroll back and it un-types, which keeps the whole
+// hero under the reader's thumb the way the rest of it already is.
+//
+// Only the integer character count goes into state, so this re-renders once
+// per character rather than once per scroll frame.
+function useTypedCount(
+  p: MotionValue<number>,
+  inFrom: number, inTo: number,
+  outFrom: number, outTo: number,
+  total: number,
+) {
+  const countAt = (v: number) => {
+    const typed = easeOut(clamp01((v - inFrom) / (inTo - inFrom)))
+    const erased = clamp01((v - outFrom) / (outTo - outFrom))
+    return Math.round(total * clamp01(typed - erased))
+  }
+  const [n, setN] = useState(() => countAt(p.get()))
+  useMotionValueEvent(p, 'change', (v) => setN(countAt(v)))
+  return n
+}
+
+function Caret({ visible }: { visible: MotionValue<number> }) {
+  return (
+    <motion.span
+      aria-hidden
+      className="inline-block text-gold"
+      style={{ opacity: visible }}
+    >
+      <motion.span
+        className="inline-block"
+        animate={{ opacity: [1, 0] }}
+        transition={{ duration: 0.8, repeat: Infinity, repeatType: 'reverse' }}
+      >
+        |
+      </motion.span>
+    </motion.span>
+  )
 }
 
 function Beat({
@@ -67,27 +130,85 @@ function Beat({
   line: string
   sub: string
 }) {
-  const { opacity, y } = useBeat(p, BEATS[index][0], BEATS[index][1])
+  const [from, to] = BEATS[index]
+
+  // Choreography, as fractions of the beat's own window: the rule draws, the
+  // prompt line arrives, then the statement types. The erase is quicker than
+  // the type, the way a real backspace is.
+  const span = to - from
+  const ruleIn: [number, number] = [from, from + span * 0.09]
+  const kickIn: [number, number] = [from + span * 0.04, from + span * 0.16]
+  // Typing finishes by 40% of the beat, the sub by 44%. On beat 03 that puts
+  // the line complete at p≈0.82 against a melt that now starts at 0.86 — a
+  // clear stretch with the whole statement up and no lava on screen.
+  const typeIn: [number, number] = [from + span * 0.14, from + span * 0.4]
+  const subIn: [number, number] = [from + span * 0.33, from + span * 0.44]
+  const eraseFrom = to - span * 0.15
+  const eraseTo = to - span * 0.05
+  const fadeOut: [number, number] = [to - span * 0.06, to - span * 0.01]
+
+  const scaleX = useTransform(p, ramp([ruleIn[0], ruleIn[1]], [0, 1]))
+  const chromeOut = useTransform(p, ramp([fadeOut[0], fadeOut[1]], [1, 0]))
+  const kickOpacity = useTransform(p, ramp([kickIn[0], kickIn[1], fadeOut[0], fadeOut[1]], [0, 1, 1, 0]))
+  const kickX = useTransform(p, ramp([kickIn[0], kickIn[1]], [-18, 0]))
+  const caretOpacity = useTransform(p, ramp([kickIn[1], typeIn[0], eraseTo, fadeOut[1]], [0, 1, 1, 0]))
+  const subOpacity = useTransform(p, ramp([subIn[0], subIn[1], fadeOut[0], fadeOut[1]], [0, 1, 1, 0]))
+  const subY = useTransform(p, ramp([subIn[0], subIn[1], fadeOut[0], fadeOut[1]], [18, 0, 0, -14]))
+
+  const typed = useTypedCount(p, typeIn[0], typeIn[1], eraseFrom, eraseTo, line.length)
+
   return (
-    // positioning lives on the outer div — the motion child owns `transform`,
-    // so a Tailwind -translate-y-1/2 on the same element would be overwritten
-    <div className="absolute inset-x-0 top-[57%] -translate-y-1/2 px-6 md:px-12 text-center">
-      <motion.div style={{ opacity, y }} className="max-w-[1000px] mx-auto">
-        <p className="label-gold mb-6">
-          <span className="tabular-nums">0{index + 1}</span>
-          <span className="mx-3 text-fog/40">/</span>
-          {kicker}
-        </p>
-        <h2
-          className="font-display font-semibold text-ivory"
-          style={{ fontSize: 'clamp(2.1rem, 6vw, 5.6rem)', letterSpacing: '-0.035em', lineHeight: 1.02 }}
-        >
-          {line}
-        </h2>
-        <p className="mt-8 mx-auto max-w-[620px] text-fog leading-relaxed text-base md:text-lg">
-          {sub}
-        </p>
-      </motion.div>
+    // Deliberately left-aligned and pushed off the centre line. The masthead
+    // above is a centred geometric sans at 13vw; this is rust monospace at a
+    // fraction of that size. Different face, different colour, different axis
+    // — the two no longer read as the same object.
+    <div className="absolute inset-x-0 top-[56%] -translate-y-1/2 px-6 md:px-12">
+      <div className="max-w-[1500px] mx-auto pl-[8vw] md:pl-[9vw]">
+        <div className="max-w-[760px]">
+          <motion.div
+            className="h-px w-[30%] max-w-[220px] bg-ink/25 origin-left mb-6"
+            style={{ scaleX, opacity: chromeOut }}
+            aria-hidden
+          />
+
+          <motion.p
+            className="font-mono text-[9px] md:text-[10px] uppercase text-ink/50 mb-7"
+            style={{ letterSpacing: '0.26em', opacity: kickOpacity, x: kickX }}
+          >
+            <span className="tabular-nums">0{index + 1}</span>
+            <span className="mx-3 opacity-40">—</span>
+            {kicker}
+          </motion.p>
+
+          {/* The full line is rendered invisibly underneath to hold the box
+              open; without it the paragraph reflows on every character and the
+              sub beneath it jumps around while the statement types. */}
+          <h2
+            className="relative font-mono font-medium"
+            style={{
+              color: 'var(--accent-text)',
+              fontSize: 'clamp(1.05rem, 2.4vw, 2rem)',
+              lineHeight: 1.36,
+              letterSpacing: '-0.01em',
+            }}
+          >
+            <span className="invisible" aria-hidden>
+              {line}
+            </span>
+            <span className="absolute inset-0">
+              {line.slice(0, typed)}
+              <Caret visible={caretOpacity} />
+            </span>
+          </h2>
+
+          <motion.p
+            className="mt-8 max-w-[400px] text-ink/60 text-sm leading-relaxed"
+            style={{ opacity: subOpacity, y: subY }}
+          >
+            {sub}
+          </motion.p>
+        </div>
+      </div>
     </div>
   )
 }
@@ -97,14 +218,15 @@ function Tick({ p, index }: { p: MotionValue<number>; index: number }) {
   const active = useTransform(p, ramp([from - 0.04, from + 0.04, to - 0.04, to + 0.04], [0, 1, 1, 0]))
   const h = useTransform(active, (v) => 14 + v * 26)
   return (
-    <div className="relative w-px h-10 bg-ivory/15">
+    <div className="relative w-px h-10 bg-ink/15">
       <motion.div className="absolute top-0 left-0 w-px bg-gold" style={{ height: h, opacity: active }} />
     </div>
   )
 }
 
 function Rail({ p }: { p: MotionValue<number> }) {
-  const opacity = useTransform(p, ramp([0.2, 0.29, 0.94, 1], [0, 1, 1, 0]))
+  // out before the melt reaches it — the ticks disappear on orange anyway
+  const opacity = useTransform(p, ramp([0.18, 0.27, 0.86, 0.93], [0, 1, 1, 0]))
   return (
     <motion.div
       style={{ opacity }}
@@ -176,18 +298,18 @@ export default function Hero({ started }: { started: boolean }) {
         <div className="max-w-[1100px] mx-auto text-center">
           <p className="label mb-8">{profile.discipline} · India → Sydney</p>
           <h1
-            className="font-display font-bold text-ivory"
+            className="font-display font-bold text-ink"
             style={{ fontSize: 'clamp(3rem, 12vw, 11rem)', letterSpacing: '-0.045em', lineHeight: 0.9 }}
           >
             SUKHMANI
           </h1>
-          <p className="mt-10 mx-auto max-w-[640px] text-fog leading-relaxed text-lg">
+          <p className="mt-10 mx-auto max-w-[640px] text-ink/70 leading-relaxed text-lg">
             {profile.positioning}
           </p>
-          <div className="mt-14 grid grid-cols-2 md:grid-cols-4 gap-4">
+          <div className="mt-14 grid grid-cols-2 md:grid-cols-4 gap-px bg-ink/15">
             {stats.map((s) => (
-              <div key={s.label} className="liquid-glass rounded-2xl px-5 py-6">
-                <div className="font-display font-bold text-3xl text-ivory leading-none">{s.value}</div>
+              <div key={s.label} className="bg-bone px-5 py-6">
+                <div className="font-display font-bold text-3xl leading-none">{s.value}</div>
                 <div className="label mt-2 !text-[9px]">{s.label}</div>
               </div>
             ))}
@@ -226,7 +348,7 @@ export default function Hero({ started }: { started: boolean }) {
             <div className="absolute inset-x-0 top-1/2 -translate-y-1/2 px-2">
               <motion.h1
                 ref={nameRef}
-                className="text-center font-display font-bold text-ivory"
+                className="text-center font-display font-bold text-ink"
                 style={{ y: nameLiftY }}
               >
                 <span
@@ -263,7 +385,9 @@ export default function Hero({ started }: { started: boolean }) {
                 src="/portrait.png"
                 alt={`${profile.name} — ${profile.title}`}
                 className="h-full w-auto max-w-[94vw] object-contain object-bottom"
-                style={{ filter: 'grayscale(1) contrast(1.06) drop-shadow(0 30px 60px rgba(0,0,0,0.6))' }}
+                /* on bone the heavy black drop-shadow read as grime; a light
+                   contrast lift is all the portrait needs to sit on the page */
+                style={{ filter: 'grayscale(1) contrast(1.04)' }}
                 onError={(e) => {
                   if (imgOkRef.current) {
                     imgOkRef.current = false
@@ -275,8 +399,8 @@ export default function Hero({ started }: { started: boolean }) {
           </motion.div>
         </div>
 
-        {/* liquid melt — rises under the closing beat */}
-        <BlobMorph triggerRef={wrapRef} from={0.72} to={1} />
+        {/* liquid melt — rises behind the closing beat */}
+        <BlobMorph triggerRef={wrapRef} from={MELT_FROM} to={1} />
 
         {/* availability pill */}
         <motion.div style={{ opacity: chromeOpacity }} className="absolute left-[3%] md:left-[6%] bottom-[8%] z-40">
@@ -284,7 +408,7 @@ export default function Hero({ started }: { started: boolean }) {
             initial={{ opacity: 0, y: 20 }}
             animate={started ? { opacity: 1, y: 0 } : undefined}
             transition={{ delay: 0.7, duration: 0.7, ease: EASE }}
-            className="flex items-center gap-2 liquid-glass-strong rounded-full px-4 py-2.5 text-ivory text-xs font-medium whitespace-nowrap shadow-pop"
+            className="flex items-center gap-2 bg-ink text-bone rounded-full px-4 py-2.5 text-xs font-medium whitespace-nowrap"
           >
             <span className="relative flex h-2 w-2">
               <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-gold opacity-70" />
@@ -308,7 +432,7 @@ export default function Hero({ started }: { started: boolean }) {
             Scroll
           </motion.span>
           <motion.span
-            className="block w-px h-10 bg-gradient-to-b from-gold to-transparent"
+            className="block w-px h-10 bg-gold"
             initial={{ scaleY: 0 }}
             animate={started ? { scaleY: 1 } : undefined}
             transition={{ delay: 1, duration: 0.8, ease: EASE }}
@@ -319,7 +443,8 @@ export default function Hero({ started }: { started: boolean }) {
         {/* ——— the journey ——— */}
         <Rail p={p} />
 
-        <div className="absolute inset-0 z-30">
+        {/* below the melt's z-[60] — the lava is meant to swallow this copy */}
+        <div className="absolute inset-0 z-30 pointer-events-none">
           {heroJourney.map((b, i) => (
             <Beat key={b.line} p={p} index={i} kicker={b.kicker} line={b.line} sub={b.sub} />
           ))}

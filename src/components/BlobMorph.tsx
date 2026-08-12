@@ -141,23 +141,17 @@ export default function BlobMorph({
   return (
     // pool + curtain in one svg; clipped to the hero and scrolls away with it
     <div className="absolute inset-0 z-[60] pointer-events-none overflow-hidden" aria-hidden>
+      {/* One flat orange for every flow. The gradient that used to run down the
+          viewBox is gone: the pool and the curtain are the same material, and
+          the only honest way to say that is to fill them with the same colour.
+          The back layer is the same orange at lower alpha, which reads as a
+          trailing edge without introducing a second hue. */}
       <svg viewBox="0 0 1000 1000" preserveAspectRatio="none" className="absolute inset-0 w-full h-full">
-        <defs>
-          {/* ONE gradient for both flows, in user space across the full viewBox.
-              Colour is therefore a function of absolute height rather than of
-              each shape's own box, so the curtain dripping down and the pool
-              rising up read as the same material meeting in the middle
-              instead of two differently-tinted blobs. */}
-          <linearGradient id="meltGrad" x1="0" y1="0" x2="0" y2="1000" gradientUnits="userSpaceOnUse">
-            <stop offset="0%" stopColor="var(--violet)" />
-            <stop offset="100%" stopColor="var(--lavender)" />
-          </linearGradient>
-        </defs>
         {/* pool — rises from the bottom */}
-        <path ref={backRef} d={pool(0, 0.08, 0.9)} fill="var(--violet)" opacity={0.45} />
-        <path ref={frontRef} d={pool(0, 0, 1)} fill="url(#meltGrad)" opacity={0.97} />
+        <path ref={backRef} d={pool(0, 0.08, 0.9)} fill="var(--violet)" opacity={0.4} />
+        <path ref={frontRef} d={pool(0, 0, 1)} fill="var(--violet)" />
         {/* curtain — drips down from the top, same fill */}
-        <path ref={curtainRef} d={curtain(0)} fill="url(#meltGrad)" opacity={0.97} />
+        <path ref={curtainRef} d={curtain(0)} fill="var(--violet)" />
       </svg>
     </div>
   )

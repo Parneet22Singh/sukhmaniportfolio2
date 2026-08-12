@@ -163,7 +163,7 @@ function Card({ m, i, progress, refFn }: { m: (typeof mediaReels)[number]; i: nu
   return (
     <motion.div ref={refFn} style={{ opacity, y, scale }} className="relative">
       {m.type === 'youtube' ? (
-        <div className="rounded-xl overflow-hidden border border-gold/20 bg-warmdark/80 backdrop-blur-sm shadow-soft">
+        <div className="overflow-hidden border border-gold/25 bg-warmdark">
           <YouTube id={m.id} title={m.title} className="!rounded-none" />
           <div className="flex items-center justify-between px-4 py-3">
             <span className="text-ivory text-xs md:text-sm truncate">{m.title}</span>
@@ -175,17 +175,16 @@ function Card({ m, i, progress, refFn }: { m: (typeof mediaReels)[number]; i: nu
           href={m.url}
           target="_blank"
           rel="noopener noreferrer"
-          className="group flex flex-col justify-between aspect-video md:aspect-[16/11] rounded-xl border border-white/60 p-5 shadow-soft backdrop-blur-sm transition-transform duration-500 hover:-translate-y-1"
-          style={{ background: 'linear-gradient(150deg, #FF5A1E 0%, #FF8A4C 55%, #FFB020 100%)' }}
+          className="group flex flex-col justify-between aspect-video md:aspect-[16/11] bg-gold p-5 transition-colors duration-300 hover:bg-ink"
         >
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" className="text-white" aria-hidden>
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" className="text-ink group-hover:text-bone transition-colors" aria-hidden>
             <rect x="2" y="2" width="20" height="20" rx="6" stroke="currentColor" strokeWidth="1.2" />
             <circle cx="12" cy="12" r="4.5" stroke="currentColor" strokeWidth="1.2" />
             <circle cx="17.5" cy="6.5" r="1.2" fill="currentColor" />
           </svg>
-          <div>
-            <p className="font-display text-lg md:text-xl text-white" style={{ letterSpacing: '-0.02em' }}>{m.title}</p>
-            <p className="mt-1.5 u-link inline-block !text-[9px] uppercase tracking-[0.15em] font-medium text-white/90">Watch Reel ↗</p>
+          <div className="text-ink group-hover:text-bone transition-colors">
+            <p className="font-display text-lg md:text-xl" style={{ letterSpacing: '-0.02em' }}>{m.title}</p>
+            <p className="mt-1.5 inline-block !text-[9px] uppercase tracking-[0.15em] font-medium opacity-75">Watch Reel ↗</p>
           </div>
         </a>
       )}
@@ -208,7 +207,7 @@ export default function Media() {
   // Reduced-motion / fallback: plain grid
   if (still) {
     return (
-      <section id="media" className="relative py-[14vh] px-6 md:px-12">
+      <section id="media" className="block-dark relative py-[14vh] px-6 md:px-12">
         <div className="max-w-[1400px] mx-auto">
           <p className="label mb-4">Media</p>
           <h2 className="font-display font-semibold text-ivory mb-14" style={{ fontSize: 'clamp(2.4rem, 5vw, 5rem)', letterSpacing: '-0.03em' }}>
@@ -225,7 +224,10 @@ export default function Media() {
   }
 
   return (
-    <section ref={sectionRef} id="media" className="relative h-[300vh]">
+    // block-dark: the particle constellation is drawn in orange on transparent
+    // and only reads against a black field — this is one of the two moments the
+    // practice side goes dark on purpose.
+    <section ref={sectionRef} id="media" className="block-dark relative h-[300vh]">
       <div className="sticky top-0 h-screen overflow-hidden">
         <MorphCanvas progress={scrollYProgress} cardRefs={cardRefs} />
 

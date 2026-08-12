@@ -2,7 +2,7 @@ import { useRef, type ReactNode } from 'react'
 import { motion, useInView } from 'framer-motion'
 import MarketingFlow from './MarketingFlow'
 import QuietField from './QuietField'
-import { capabilities } from '../data/portfolio'
+import ScrapCutouts from './ScrapCutouts'
 
 const ease = [0.22, 1, 0.36, 1] as const
 
@@ -32,7 +32,7 @@ function Ghost({ n, className = '' }: { n: string; className?: string }) {
   return (
     <span
       aria-hidden
-      className={`absolute font-display font-bold text-ivory/[0.04] select-none pointer-events-none leading-none ${className}`}
+      className={`absolute font-display font-bold text-ink/[0.07] select-none pointer-events-none leading-none ${className}`}
       style={{ fontSize: '20vw' }}
     >
       {n}
@@ -55,17 +55,17 @@ export default function Services() {
             <motion.p variants={child} className="label-gold mb-6">Diagnosis</motion.p>
             <motion.h3
               variants={child}
-              className="font-display font-semibold text-ivory"
+              className="font-display font-semibold text-ink"
               style={{ fontSize: 'clamp(2.2rem, 4.5vw, 4.5rem)', letterSpacing: '-0.03em', lineHeight: 1 }}
             >
               Find the constraint
             </motion.h3>
-            <motion.p variants={child} className="mt-7 max-w-[540px] text-fog leading-relaxed">
+            <motion.p variants={child} className="mt-7 max-w-[540px] text-ink/65 leading-relaxed">
               Before a single campaign is briefed: what is actually limiting growth? Usually it is positioning nobody
               agreed on, a funnel that leaks after the click, or two teams working from different definitions of a good
               lead. I go find it in the data, the CRM, the spend history and the conversations nobody has written down.
             </motion.p>
-            <motion.p variants={child} className="mt-7 max-w-[540px] text-ivory/80 leading-relaxed border-l-2 border-gold/40 pl-5">
+            <motion.p variants={child} className="mt-7 max-w-[540px] text-ink/85 leading-relaxed border-l-2 border-gold/40 pl-5">
               The deliverable is one sentence, not a deck: <span className="text-gold">here is the constraint, and here is what it costs you.</span>
             </motion.p>
           </div>
@@ -76,7 +76,7 @@ export default function Services() {
           <Ghost n="02" className="top-[-5vw] left-0" />
           <motion.div
             variants={child}
-            className="relative md:w-[38%] aspect-[3/4] rounded-2xl overflow-hidden shadow-soft mb-12 md:mb-0 border border-ivory/10"
+            className="relative md:w-[38%] aspect-[3/4] rounded-2xl overflow-hidden shadow-soft mb-12 md:mb-0 border border-ink/15"
             ref={revealRef}
           >
             <MarketingFlow />
@@ -92,16 +92,16 @@ export default function Services() {
             <motion.p variants={child} className="label-gold mb-6">Demand</motion.p>
             <motion.h3
               variants={child}
-              className="font-display font-semibold text-ivory"
+              className="font-display font-semibold text-ink"
               style={{ fontSize: 'clamp(2.2rem, 4.5vw, 4.5rem)', letterSpacing: '-0.03em', lineHeight: 1 }}
             >
               Stories that Sell
             </motion.h3>
-            <motion.p variants={child} className="mt-7 max-w-[520px] text-fog leading-relaxed">
+            <motion.p variants={child} className="mt-7 max-w-[520px] text-ink/65 leading-relaxed">
               One narrative, carried across OOH, film, creator, social, search and events — so every channel compounds
               the same idea instead of five channels each starting from scratch.
             </motion.p>
-            <motion.p variants={child} className="mt-7 max-w-[520px] text-fog leading-relaxed">
+            <motion.p variants={child} className="mt-7 max-w-[520px] text-ink/65 leading-relaxed">
               Built backwards from the pipeline target. If a channel cannot show how it moves someone toward a decision,
               it does not get budget.
             </motion.p>
@@ -116,12 +116,12 @@ export default function Services() {
             <motion.p variants={child} className="label-gold mb-6">Measurement</motion.p>
             <motion.h3
               variants={child}
-              className="font-display font-semibold text-ivory"
+              className="font-display font-semibold text-ink"
               style={{ fontSize: 'clamp(2.2rem, 4.5vw, 4.5rem)', letterSpacing: '-0.03em', lineHeight: 1 }}
             >
               Measured Outcomes
             </motion.h3>
-            <motion.p variants={child} className="mt-7 max-w-[620px] mx-auto text-fog leading-relaxed">
+            <motion.p variants={child} className="mt-7 max-w-[620px] mx-auto text-ink/65 leading-relaxed">
               Work that cannot be measured cannot be defended, repeated or funded — it quietly dies in budget review.
               So attribution gets wired to pipeline before the campaign goes live, not after someone asks.
             </motion.p>
@@ -133,9 +133,9 @@ export default function Services() {
                 { t: 'Decide', d: 'Consumer intelligence and structured testing that tell you what to stop, not just what to start.' },
               ].map((m, i) => (
                 <div key={m.t} className="liquid-glass rounded-2xl p-6">
-                  <span className="font-display text-fog/50 text-sm">0{i + 1}</span>
-                  <h4 className="mt-2 font-display font-semibold text-lg text-ivory">{m.t}</h4>
-                  <p className="mt-2 text-fog text-sm leading-relaxed">{m.d}</p>
+                  <span className="font-display text-ink/55 text-sm">0{i + 1}</span>
+                  <h4 className="mt-2 font-display font-semibold text-lg text-ink">{m.t}</h4>
+                  <p className="mt-2 text-ink/65 text-sm leading-relaxed">{m.d}</p>
                 </div>
               ))}
             </motion.div>
@@ -149,7 +149,7 @@ export default function Services() {
           <motion.p variants={child} className="label mb-5">Where I can help</motion.p>
           <motion.h3
             variants={child}
-            className="font-display font-semibold text-ivory max-w-[820px]"
+            className="font-display font-semibold text-ink max-w-[820px]"
             style={{ fontSize: 'clamp(1.9rem, 4vw, 3.6rem)', letterSpacing: '-0.03em', lineHeight: 1.04 }}
           >
             Marketing is the entry point,
@@ -157,40 +157,10 @@ export default function Services() {
           </motion.h3>
         </Moment>
 
-        {/* Six lines, nothing else. The area name is a whisper; the line does
-            the work and is sized to be read from across the room. */}
-        <Moment>
-          {capabilities.map((c, i) => (
-            <motion.div
-              key={c.area}
-              variants={child}
-              data-cursor="hover"
-              className="group relative border-t border-ivory/10 last:border-b py-8 md:py-11"
-            >
-              <span
-                className="absolute left-0 top-0 h-px w-0 bg-gold transition-all duration-[900ms] ease-out group-hover:w-full"
-                aria-hidden
-              />
-              <div
-                className="flex flex-col md:flex-row md:items-baseline md:gap-10"
-                style={{ paddingLeft: `${(i % 3) * 3}vw` }}
-              >
-                <div className="flex items-baseline gap-4 md:w-[300px] shrink-0">
-                  <span className="font-display text-fog/35 text-sm tabular-nums">{c.n}</span>
-                  <span className="label !text-[9px] group-hover:!text-gold transition-colors duration-500">
-                    {c.area}
-                  </span>
-                </div>
-                <p
-                  className="mt-4 md:mt-0 font-display font-medium text-ivory/90 group-hover:text-gold transition-colors duration-500"
-                  style={{ fontSize: 'clamp(1.5rem, 3.2vw, 2.9rem)', letterSpacing: '-0.03em', lineHeight: 1.06 }}
-                >
-                  {c.line}
-                </p>
-              </div>
-            </motion.div>
-          ))}
-        </Moment>
+        {/* Six lines as torn scraps taped to the page. As a stack of hairline
+            rows this read like a price list; the practice is a board of things
+            she has done, so it gets pinned up like one. */}
+        <ScrapCutouts />
       </div>
     </section>
   )

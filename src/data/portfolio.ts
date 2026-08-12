@@ -6,31 +6,37 @@
 export const profile = {
   name: 'Sukhmani',
   title: 'Associate Vice President – Marketing',
+  company: 'Square Yards Australia',
   discipline: 'Growth & Marketing Leadership',
   email: 'sukhmanibaghla@outlook.com',
+  // Two numbers, two markets — reachable on either side of the move.
   phone: '+91 9910853014',
+  phones: [
+    { region: 'India', number: '+91 9910853014' },
+    { region: 'Australia', number: '+61 432 654 242' },
+  ],
   linkedin: 'https://www.linkedin.com/in/sukhmani-baghla/',
   location: 'Gurugram, India',
   relocating: 'Relocating to Sydney, Australia · Aug 2026',
   tagline: 'I find what is holding the business back — and fix it.',
   positioning:
-    'Nine years running growth for a business that scaled across five markets. Marketing is where I started; the constraint is what I actually solve for.',
+    'Nine years running growth for a business that scaled across India, the Middle East, Canada and Australia. Marketing is where I started; the constraint is what I actually solve for.',
   statusBadge: 'Open to senior roles in Australia, from Aug 2026',
   specialisms: ['Growth Strategy', 'Brand & Narrative', 'Demand Generation', 'Operating Structure'],
 }
 
 export const stats = [
   { value: '9+', label: 'Years leading growth' },
-  { value: '5', label: 'Markets operated in' },
+  { value: '4', label: 'Regions operated in' },
   { value: '3', label: 'Teams built and run' },
-  { value: 'MBA', label: 'Advanced · Wollongong' },
+  { value: 'MBA', label: 'Advanced · SSB, UOW' },
 ]
 
 export const bio = {
   paragraphs: [
-    'I spent nine years inside a business that grew across India and the Middle East — not advising from the outside, but owning the number, the budget and the teams. That means I have made the calls, lived with the consequences, and learned where growth actually breaks.',
+    'I spent nine years inside a business that grew across India, the Middle East, Canada and Australia — not advising from the outside, but owning the number, the budget and the teams. That means I have made the calls, lived with the consequences, and learned where growth actually breaks.',
     'It rarely breaks where people think. The brief says "we need better campaigns." The real problem is usually a positioning nobody agrees on, a funnel that leaks after the click, or a sales and marketing pair working from two different definitions of a good lead.',
-    "I am completing an MBA (Advanced) at the University of Wollongong's Sydney Campus, and moving to Australia in 2026 to do this work for businesses there.",
+    'I am completing an MBA (Advanced) at the Sydney School of Business, UOW, and moving to Australia in 2026 to do this work for businesses there.',
   ],
   pullQuote:
     'Most businesses do not have a marketing problem. They have a problem that marketing was asked to hide.',
@@ -234,8 +240,8 @@ export const caseStudies = [
 export const education = [
   {
     degree: 'MBA Advanced',
-    institution: 'University of Wollongong',
-    location: 'Sydney Campus, Australia',
+    institution: 'Sydney School of Business, UOW',
+    location: 'Sydney, Australia',
     period: 'August 2026 – Present',
     note: 'Starting Aug 2026 · Student Visa (Subclass 500)',
     highlighted: true,
@@ -283,9 +289,9 @@ export const experience = [
     tag: '5 Years',
     teams: [],
     mandate:
-      'Scale marketing across India and the Middle East without losing the brand in translation.',
+      'Scale marketing across India, the Middle East, Canada and Australia without losing the brand in translation.',
     points: [
-      'Directed integrated marketing campaigns across India and the Middle East, managing multi-channel budgets and cross-functional teams to deliver against growth targets.',
+      'Directed integrated marketing campaigns across India, the Middle East, Canada and Australia, managing multi-channel budgets and cross-functional teams to deliver against growth targets.',
       'Built brand visibility and recall in competitive markets through targeted regional initiatives and consistent brand governance.',
       'Managed agency and vendor ecosystems, ensuring cost-effective, on-brand execution of advertising and promotional activity.',
       'Delivered actionable competitive and consumer intelligence that directly shaped marketing strategy and messaging frameworks.',
@@ -334,6 +340,28 @@ export const mediaReels = [
   { type: 'instagram' as const, url: 'https://www.instagram.com/reel/DO5a3ynEnl6/', title: 'Instagram — ORM' },
   { type: 'instagram' as const, url: 'https://www.instagram.com/reel/DQyTj4QkpB3/', title: 'Instagram — Branding' },
   { type: 'instagram' as const, url: 'https://www.instagram.com/reel/DTzmsPziCFH/', title: 'Instagram — Social' },
+]
+
+// --- Long-form video: TVCs and the branded series ---
+// Both play in-page from the embedded player; the playlist id keeps the rest of
+// the series queued behind the opening film, so nothing sends a visitor off-site.
+export const filmSeries = [
+  {
+    kicker: 'TVC',
+    title: 'Television commercials',
+    blurb: 'Brand films cut for television and digital, running as one playlist.',
+    videoId: 'vBic1X9ihtw',
+    playlistId: 'PL_c4ir6KiGjdLiXN5eLHMTBCKeyYN3lL7',
+    meta: 'Playlist',
+  },
+  {
+    kicker: 'Series',
+    title: 'Meri Wali Home Story',
+    blurb: 'A celebrity home-tour series, made when nobody could shoot on location.',
+    videoId: '',
+    playlistId: 'PL_c4ir6KiGjcYh3xNNg_GXfpQGwR6UiGq',
+    meta: 'Covid-era production',
+  },
 ]
 
 // --- Campaign index (used by nav dropdown + campaign cards) ---

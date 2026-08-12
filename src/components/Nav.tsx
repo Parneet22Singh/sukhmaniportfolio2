@@ -73,15 +73,18 @@ export default function Nav() {
 
   return (
     <>
+      {/* Chrome follows the surface: var(--bg) is sand on the practice routes
+          and near-black on the campaign routes, so one header serves both. */}
       <header
-        className={`fixed top-0 left-0 right-0 z-[900] transition-all duration-500 border-b ${
-          scrolled
-            ? 'bg-midnight/70 backdrop-blur-xl border-ivory/10'
-            : 'bg-transparent border-transparent'
-        }`}
+        className="fixed top-0 left-0 right-0 z-[900] transition-all duration-500 border-b"
+        style={{
+          background: scrolled ? 'color-mix(in srgb, var(--bg) 88%, transparent)' : 'transparent',
+          borderColor: scrolled ? 'var(--border)' : 'transparent',
+          backdropFilter: scrolled ? 'blur(16px)' : undefined,
+        }}
       >
         <nav className="flex items-center justify-between px-6 md:px-12 h-16 md:h-20">
-          <Link to="/" className="flex items-baseline gap-1 font-display font-semibold text-ivory tracking-tight text-lg">
+          <Link to="/" className="flex items-baseline gap-1 font-display font-semibold tracking-tight text-lg">
             Sukhmani<span className="text-gold">®</span>
           </Link>
 
@@ -89,7 +92,7 @@ export default function Nav() {
           <div className="hidden md:flex items-center gap-8">
             {/* Campaigns dropdown */}
             <div className="relative" onMouseEnter={openDrop} onMouseLeave={closeDrop}>
-              <button onClick={() => setDrop((v) => !v)} className="label u-link !text-ivory/60 hover:!text-ivory transition-colors">
+              <button onClick={() => setDrop((v) => !v)} className="label u-link opacity-60 hover:opacity-100 transition-colors">
                 <Scramble text="CAMPAIGNS" /> <span className="text-gold">↓</span>
               </button>
               <AnimatePresence>
@@ -103,7 +106,7 @@ export default function Nav() {
                        child of the wrapper), so crossing it never fires mouseleave */
                     className="absolute top-full right-0 pt-4 w-72"
                   >
-                    <div className="liquid-glass-strong border border-ivory/10 rounded-xl p-2 shadow-soft">
+                    <div className="liquid-glass-strong border border-[var(--border)] rounded-xl p-2 shadow-soft">
                       {campaignIndex.map((c) => (
                         <Link
                           key={c.slug}
@@ -112,10 +115,10 @@ export default function Nav() {
                           className="group flex items-center justify-between px-4 py-3 rounded-lg hover:bg-gold/5 transition-colors"
                         >
                           <span>
-                            <span className="block text-sm text-ivory group-hover:text-gold transition-colors">{c.title}</span>
+                            <span className="block text-sm group-hover:text-gold transition-colors">{c.title}</span>
                             <span className="label !text-[9px]">{c.kicker}</span>
                           </span>
-                          <span className="text-fog group-hover:text-gold transition-colors">→</span>
+                          <span className="opacity-50 group-hover:text-gold group-hover:opacity-100 transition-all">→</span>
                         </Link>
                       ))}
                     </div>
@@ -127,14 +130,14 @@ export default function Nav() {
               <Link
                 key={a.to}
                 to={a.to}
-                className={`label u-link transition-colors ${pathname === a.to ? '!text-gold' : '!text-ivory/60 hover:!text-ivory'}`}
+                className={`label u-link transition-colors ${pathname === a.to ? '!text-gold' : 'opacity-60 hover:opacity-100'}`}
               >
                 <Scramble text={a.label} />
               </Link>
             ))}
             <button
               onClick={goToContact}
-              className="label-gold border border-gold/40 rounded-full px-5 py-2.5 hover:bg-gold hover:!text-midnight transition-all duration-300"
+              className="label-gold border border-gold/40 rounded-full px-5 py-2.5 hover:bg-gold hover:!text-[#17150F] transition-all duration-300"
             >
               LET'S TALK
             </button>
@@ -142,8 +145,8 @@ export default function Nav() {
 
           {/* Mobile burger */}
           <button className="lg:hidden flex flex-col gap-1.5 p-2" aria-label="Menu" onClick={() => setOpen(!open)}>
-            <span className={`block w-6 h-px bg-ivory transition-transform duration-300 ${open ? 'translate-y-[3.5px] rotate-45' : ''}`} />
-            <span className={`block w-6 h-px bg-ivory transition-transform duration-300 ${open ? '-translate-y-[3.5px] -rotate-45' : ''}`} />
+            <span className={`block w-6 h-px bg-current transition-transform duration-300 ${open ? 'translate-y-[3.5px] rotate-45' : ''}`} />
+            <span className={`block w-6 h-px bg-current transition-transform duration-300 ${open ? '-translate-y-[3.5px] -rotate-45' : ''}`} />
           </button>
         </nav>
       </header>
@@ -156,7 +159,8 @@ export default function Nav() {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.35 }}
-            className="fixed inset-0 z-[890] bg-midnight/97 backdrop-blur-2xl flex flex-col justify-center px-8 gap-1 overflow-y-auto py-24 lg:hidden"
+            style={{ background: 'var(--bg)' }}
+            className="fixed inset-0 z-[890] flex flex-col justify-center px-8 gap-1 overflow-y-auto py-24 lg:hidden"
           >
             {NAV.map((a, i) => (
               <motion.div
@@ -168,7 +172,7 @@ export default function Nav() {
                 <Link
                   to={a.to}
                   onClick={() => setOpen(false)}
-                  className="block text-left font-display text-3xl text-ivory py-1.5"
+                  className="block text-left font-display text-3xl py-1.5"
                 >
                   {a.label.charAt(0) + a.label.slice(1).toLowerCase()}
                 </Link>
@@ -183,10 +187,10 @@ export default function Nav() {
             >
               Let's talk
             </motion.button>
-            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.4 }} className="mt-6 border-t border-ivory/10 pt-6">
+            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.4 }} className="mt-6 border-t border-[var(--border)] pt-6">
               <p className="label-gold mb-3">Campaigns</p>
               {campaignIndex.map((c) => (
-                <Link key={c.slug} to={`/${c.slug}`} onClick={() => setOpen(false)} className="block text-fog py-1.5 text-lg">
+                <Link key={c.slug} to={`/${c.slug}`} onClick={() => setOpen(false)} className="block opacity-65 py-1.5 text-lg">
                   {c.title}
                 </Link>
               ))}

@@ -7,23 +7,76 @@
 @tailwind utilities;
 
 /* ============================================================
-   SUKHMANI v3 — "Impact" · warm-dark agency (Veronix)
-   Warm near-black base · warm off-white text · vivid orange accent
+   SUKHMANI v5 — "Flat, light" · three colours, no ramps
+   Bone · black · orange. Every surface is one of the three, filled
+   solid. Gradients are gone on purpose: they were what made the old
+   build read as one continuous murky dark rather than as a set of
+   deliberate blocks.
+
+   The PRACTICE routes (home, capabilities, approach, about) run on
+   bone, because a consulting practice should read like a document you
+   can hand to a board, not like a nightclub flyer. Black is reserved
+   for the two moments that earn it. The CAMPAIGN routes stay dark —
+   they are creative work and the imagery needs the black field — so
+   the surface is switched per route via html[data-surface].
    ============================================================ */
 
 :root {
-  --bg: #0d0b0a;
-  --bg-2: #15110e;
+  /* Warm sand, deliberately NOT white — a white page read as clinical and
+     generic. This has enough clay in it to feel like paper stock. */
+  --bone: #e8e0d2;
+  --bg: var(--bone);
+  --bg-2: #ded5c4; /* one step down — alt bands and hairline fills */
+  --ink: #17150f; /* primary type — warm near-black, never pure #000 */
+  --ink-dark: #17150f; /* alias, kept for existing call sites */
+  --fog: #57514a; /* secondary type on sand */
+  --violet: #ff5a1e; /* primary — vivid orange, for FILLS */
+  --lavender: #ff5a1e; /* same orange; no second stop to melt into */
+  /* Accent TEXT is a different value from accent fill. #ff5a1e on sand is
+     2.4:1 — fine as a block of colour, unreadable as a caption. This rust is
+     the same hue two steps down and lands at ~4.4:1. */
+  --accent-text: #b8380a;
+  --mint: #12b8a6;
+  --peach: #ff5a1e;
+  --sky: #4c8dff;
+  --coral: #ff3d6e;
+  --surface: rgba(23, 21, 15, 0.05);
+  --border: rgba(23, 21, 15, 0.16);
+}
+
+/* Campaign routes: the same tokens, inverted. Nothing in those pages
+   needed touching — they ask for --ink / --fog / .label like everything
+   else and simply get the dark values. */
+html[data-surface='dark'] {
+  --bg: #0a0a0a;
+  --bg-2: #111111;
   --ink: #f5f0ea;
-  --fog: #9a9088;
-  --violet: #ff5a1e; /* primary — vivid orange */
-  --lavender: #ff8a4c; /* lighter orange */
-  --mint: #12b8a6; /* teal */
-  --peach: #ff5a1e; /* orange */
-  --sky: #4c8dff; /* blue (rare) */
-  --coral: #ff3d6e; /* pink-coral */
-  --surface: rgba(255, 255, 255, 0.04);
-  --border: rgba(245, 240, 234, 0.12);
+  --fog: #8e8880;
+  --surface: rgba(255, 255, 255, 0.05);
+  --border: rgba(245, 240, 234, 0.14);
+  --accent-text: #ff7a3d; /* on black the bright orange is already legible */
+}
+
+/* Accent text follows the surface it sits on, including dark blocks that sit
+   inside a light route (the media wall, the contact footer). The escaped
+   `\!text-gold` variants are listed because Tailwind emits those with
+   !important, which a plain descendant rule cannot outrank. */
+html[data-surface='light']
+  :is(.text-gold, .label-gold, .text-gradient, .\!text-gold) {
+  color: var(--accent-text) !important;
+}
+/* Kept in its OWN rule on purpose. :is() takes the specificity of its most
+   specific argument, so folding `.group:hover .group-hover\:text-gold` into the
+   list above pushed that whole selector to (0,4,1) — above the dark-block
+   override below — and the contact footer's accents came out rust on black. */
+html[data-surface='light'] .group:hover :is(.group-hover\:\!text-gold, .group-hover\:text-gold) {
+  color: var(--accent-text) !important;
+}
+/* Anything sitting on an inverted (dark) fill needs the bright orange back,
+   or the rust goes near-invisible. */
+html[data-surface='light'] .block-dark :is(.text-gold, .label-gold, .text-gradient, .\!text-gold),
+.card-invert:hover :is(.text-gold, .label-gold, .\!text-gold) {
+  color: #ff7a3d !important;
 }
 
 @layer base {
@@ -32,26 +85,31 @@
     scroll-behavior: auto;
   }
   body {
-    @apply bg-midnight text-ivory font-sans antialiased;
+    @apply font-sans antialiased;
+    background: var(--bg);
+    color: var(--ink);
     margin: 0;
     letter-spacing: 0.01em;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     overflow-x: hidden;
+    transition: background 0.4s ease;
   }
   ::selection { background: var(--violet); color: #fff; }
   ::-webkit-scrollbar { width: 6px; }
   ::-webkit-scrollbar-track { background: var(--bg); }
-  ::-webkit-scrollbar-thumb { background: rgba(255, 90, 30, 0.45); border-radius: 3px; }
-  ::-webkit-scrollbar-thumb:hover { background: rgba(255, 90, 30, 0.75); }
+  ::-webkit-scrollbar-thumb { background: rgba(255, 90, 30, 0.55); border-radius: 3px; }
+  ::-webkit-scrollbar-thumb:hover { background: rgba(255, 90, 30, 0.85); }
 }
 
 html.lenis, html.lenis body { height: auto; }
 .lenis.lenis-smooth { scroll-behavior: auto !important; }
 
 @layer components {
+  /* var(--fog), not the Tailwind token, so labels flip with the surface */
   .label {
-    @apply uppercase text-[11px] font-medium text-fog;
+    @apply uppercase text-[11px] font-medium;
+    color: var(--fog);
     letter-spacing: 0.15em;
   }
   .label-gold {
@@ -69,73 +127,62 @@ html.lenis, html.lenis body { height: auto; }
   }
   .u-link:hover::after { transform: scaleX(1); }
 
-  /* Frosted dark card with cursor sheen — reads on the dark bg */
+  /* Flat card. No sheen, no blur wash — a solid panel with a hairline
+     that turns orange on hover. Follows the surface like everything else. */
   .liquid-glass {
     position: relative;
-    background: rgba(255, 255, 255, 0.04);
+    background: var(--surface);
     border: 1px solid var(--border);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
-    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.35);
-    transition: border-color 0.4s ease, box-shadow 0.4s ease, transform 0.4s ease;
+    transition: border-color 0.35s ease, background 0.35s ease, transform 0.4s ease;
   }
-  .liquid-glass::after {
-    content: '';
-    position: absolute; inset: 0; border-radius: inherit;
-    background: radial-gradient(240px circle at var(--mx, 50%) var(--my, 50%), rgba(255, 90, 30, 0.22), rgba(255, 138, 76, 0.08) 40%, transparent 62%);
-    opacity: 0; transition: opacity 0.35s ease; pointer-events: none;
-  }
-  .liquid-glass:hover { border-color: rgba(255, 90, 30, 0.55); box-shadow: 0 20px 60px rgba(255, 90, 30, 0.2); }
-  .liquid-glass:hover::after { opacity: 1; }
+  .liquid-glass:hover { border-color: var(--violet); }
   .liquid-glass-strong {
-    background: rgba(26, 25, 34, 0.82);
-    backdrop-filter: blur(18px);
-    -webkit-backdrop-filter: blur(18px);
-    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.45);
+    background: var(--bg);
+    border: 1px solid var(--border);
   }
+
+  /* The three surfaces, stated explicitly. `block-bone` is the same as the
+     base — it stays as a class so a section can declare its surface rather
+     than inherit it, which matters when the section sits inside a dark one. */
+  .block-bone { background: var(--bone); color: #17150f; }
+  .block-orange { background: var(--violet); color: #17150f; }
+  .block-dark { background: #0f0e0c; color: #f5f0ea; }
+
+  .block-bone .label, .block-orange .label { color: rgba(23, 21, 15, 0.62); }
+  .block-dark .label { color: #8e8880; }
+  .block-bone .u-link::after, .block-orange .u-link::after { background: #17150f; }
 }
 
-/* Shimmer text (used for accent words) — orange → amber → light orange */
-.text-gradient {
-  background: linear-gradient(100deg, #ff5a1e 0%, #ffb020 40%, #ff8a4c 72%, #ff5a1e 100%);
-  background-size: 220% auto;
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
-  animation: shimmer 9s linear infinite;
-}
-@keyframes shimmer { to { background-position: 220% center; } }
+/* Accent word. Was a shimmering gradient; now simply the orange. */
+.text-gradient { color: var(--violet); }
 
-/* ---------- Fixed bright backdrop — colour comes from the route-aware
-   blobs rendered inside <Aurora/>, so this is just the solid base ---------- */
+/* ---------- Quiet emphasis ----------
+   For the two things a visitor should leave remembering: Australia, and
+   Square Yards Australia. Deliberately NOT a colour change — recolouring the
+   word would read as a link and shout. The glyphs keep their ink and sit on a
+   low accent swipe instead, which registers as considered typography at a
+   glance and as a signal on the second pass. An inset shadow paints behind
+   the text without needing a wrapper or a stacking context. */
+.mark {
+  box-shadow: inset 0 -0.3em 0 rgba(255, 90, 30, 0.22);
+  padding: 0 0.06em;
+}
+.block-dark .mark,
+html[data-surface='dark'] .mark {
+  box-shadow: inset 0 -0.3em 0 rgba(255, 122, 61, 0.3);
+}
+@media (prefers-reduced-motion: no-preference) {
+  .mark { transition: box-shadow 0.4s ease; }
+}
+
+/* ---------- Fixed backdrop — one flat fill, nothing behind it ---------- */
 .backdrop-root {
   position: fixed; inset: 0; z-index: 0; pointer-events: none;
   background: var(--bg);
-  transition: background 0.6s ease;
-}
-.backdrop-vignette {
-  position: absolute; inset: 0;
-  background: radial-gradient(ellipse at center, transparent 45%, rgba(13, 11, 10, 0.78) 100%);
 }
 .blob {
-  position: absolute; border-radius: 9999px; filter: blur(70px);
+  position: absolute; border-radius: 9999px;
   pointer-events: none; will-change: transform;
-}
-
-/* Elle-Harper-style spotlight: violet core glow → dark, with concentric rings */
-.spotlight-core {
-  position: absolute; left: 50%; top: 46%; transform: translate(-50%, -50%);
-  width: 120vh; height: 120vh; border-radius: 9999px;
-  background: radial-gradient(circle, var(--spot, rgba(255,90,30,0.5)) 0%, rgba(255,90,30,0.16) 34%, transparent 62%);
-  pointer-events: none;
-}
-.spotlight-rings {
-  position: absolute; left: 50%; top: 46%; transform: translate(-50%, -50%);
-  pointer-events: none;
-}
-.spotlight-rings i {
-  position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%);
-  border-radius: 9999px; border: 1px solid var(--ring, rgba(167,139,250,0.09));
 }
 
 /* mesh-root kept so campaign pages don't break; re-graded light */
@@ -180,8 +227,10 @@ html.lenis, html.lenis body { height: auto; }
   100% { transform: translate(3%, 3%); }
 }
 
-.shadow-soft { box-shadow: 0 30px 90px rgba(0, 0, 0, 0.5); }
-.shadow-pop { box-shadow: 0 24px 70px rgba(255, 90, 30, 0.35); }
+/* Flat build: depth comes from colour blocks, not from soft glows. These are
+   kept as tight edges so existing markup still reads, without the haze. */
+.shadow-soft { box-shadow: 0 10px 26px rgba(0, 0, 0, 0.4); }
+.shadow-pop { box-shadow: 0 0 0 1px rgba(255, 90, 30, 0.5); }
 
 /* ---------- SocialCards fan ---------- */
 .fan-layout { position: relative; height: 22rem; }

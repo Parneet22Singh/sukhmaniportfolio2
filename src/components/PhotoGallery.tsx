@@ -26,7 +26,7 @@ function Photo({ photo, direction, size }: { photo: GalleryPhoto; direction: Dir
   const inner = photo.src ? (
     <img src={photo.src} alt={photo.label || 'photo'} className="w-full h-full object-cover rounded-3xl" draggable={false} loading="lazy" />
   ) : (
-    <div className="w-full h-full rounded-3xl flex flex-col items-center justify-center text-center px-4" style={{ background: photo.gradient || 'linear-gradient(150deg,#FF5A1E,#FFB020 60%,#FF8A4C)' }}>
+    <div className="w-full h-full rounded-3xl flex flex-col items-center justify-center text-center px-4" style={{ background: photo.gradient || '#FF5A1E' }}>
       <span className="text-white text-2xl mb-2">♥</span>
       {photo.label && <p className="font-display font-semibold text-white leading-tight">{photo.label}</p>}
       {photo.sublabel && <p className="text-white/80 text-[10px] uppercase tracking-[0.15em] mt-1.5">{photo.sublabel}</p>}
