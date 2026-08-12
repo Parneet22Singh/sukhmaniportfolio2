@@ -5,12 +5,16 @@ import { mediaReels } from '../data/portfolio'
 
 /* ============================================================
    THE MIND IN MOTION
-   A constellation of gold particles forms a brain; on scroll it
+   A constellation of ink particles forms a brain; on scroll it
    disintegrates and re-assembles into the six media frames.
    Canvas 2D — 420 particles, no extra deps.
    ============================================================ */
 
 const N = 420
+// Drawn on sand, not on black. Orange particles on a warm light ground came
+// out at roughly 2.4:1 and the constellation dissolved into the paper, so the
+// mass of the brain is ink and only every fifth node carries the accent.
+const INK = '23, 21, 15'
 const GOLD = '255, 90, 31'
 
 type P = { bx: number; by: number; t: number; stagger: number; card: number }
@@ -51,10 +55,20 @@ function MorphCanvas({ progress, cardRefs }: { progress: MotionValue<number>; ca
       }
 
     let W = 0, H = 0
+    // Backing store capped at 1.5x rather than full devicePixelRatio. On a 3x
+    // tablet the canvas would otherwise be nine times the pixels to clear and
+    // repaint every frame, for dots 1.4px across that nobody can see the edges
+    // of anyway.
+    const dpr = Math.min(window.devicePixelRatio || 1, 1.5)
     const resize = () => {
       const r = canvas.parentElement!.getBoundingClientRect()
-      W = canvas.width = r.width
-      H = canvas.height = r.height
+      W = r.width
+      H = r.height
+      canvas.width = Math.round(W * dpr)
+      canvas.height = Math.round(H * dpr)
+      canvas.style.width = `${W}px`
+      canvas.style.height = `${H}px`
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0)
     }
     resize()
     window.addEventListener('resize', resize)
@@ -118,9 +132,9 @@ function MorphCanvas({ progress, cardRefs }: { progress: MotionValue<number>; ca
       })
 
       // constellation lines, dissolving as the mind disperses
-      const lineAlpha = Math.max(0, 0.28 - p * 0.55)
+      const lineAlpha = Math.max(0, 0.22 - p * 0.44)
       if (lineAlpha > 0.004) {
-        ctx.strokeStyle = `rgba(${GOLD}, ${lineAlpha})`
+        ctx.strokeStyle = `rgba(${INK}, ${lineAlpha})`
         ctx.lineWidth = 0.6
         ctx.beginPath()
         for (const [a, b] of pairs) {
@@ -133,9 +147,10 @@ function MorphCanvas({ progress, cardRefs }: { progress: MotionValue<number>; ca
       // particles
       for (let i = 0; i < N; i++) {
         const lp = easeInOut(Math.min(Math.max((p - parts[i].stagger) / 0.7, 0), 1))
-        const a = 0.75 - lp * 0.45
-        ctx.fillStyle = `rgba(${GOLD}, ${a})`
-        const r = 1.4 + (i % 5 === 0 ? 0.9 : 0)
+        const accent = i % 5 === 0
+        const a = (accent ? 0.9 : 0.62) - lp * 0.4
+        ctx.fillStyle = `rgba(${accent ? GOLD : INK}, ${a})`
+        const r = 1.4 + (accent ? 0.9 : 0)
         ctx.beginPath()
         ctx.arc(pos[i][0], pos[i][1], r, 0, Math.PI * 2)
         ctx.fill()
@@ -154,19 +169,22 @@ function MorphCanvas({ progress, cardRefs }: { progress: MotionValue<number>; ca
   return <canvas ref={canvasRef} className="absolute inset-0 w-full h-full pointer-events-none" aria-hidden />
 }
 
-function Card({ m, i, progress, refFn }: { m: (typeof mediaReels)[number]; i: number; progress: MotionValue<number>; refFn: (el: HTMLDivElement | null) => void }) {
+function Card({ m, i, progress, refFn, pinned = true }: { m: (typeof mediaReels)[number]; i: number; progress: MotionValue<number>; refFn: (el: HTMLDivElement | null) => void; pinned?: boolean }) {
   const start = 0.52 + i * 0.06
   const opacity = useTransform(progress, [start, start + 0.12], [0, 1])
   const y = useTransform(progress, [start, start + 0.12], [28, 0])
   const scale = useTransform(progress, [start, start + 0.12], [0.94, 1])
 
+  // In the fallback grid there is no pinned section to measure, so the scroll
+  // progress these transforms read is the whole document's. Cards would sit at
+  // opacity 0 until the reader was 52% down the page — invisible on a phone.
   return (
-    <motion.div ref={refFn} style={{ opacity, y, scale }} className="relative">
+    <motion.div ref={refFn} style={pinned ? { opacity, y, scale } : undefined} className="relative">
       {m.type === 'youtube' ? (
-        <div className="overflow-hidden border border-gold/25 bg-warmdark">
+        <div className="overflow-hidden border border-ink/15 bg-sand">
           <YouTube id={m.id} title={m.title} className="!rounded-none" />
           <div className="flex items-center justify-between px-4 py-3">
-            <span className="text-ivory text-xs md:text-sm truncate">{m.title}</span>
+            <span className="text-ink text-xs md:text-sm truncate">{m.title}</span>
             <span className="label !text-[8px] shrink-0 ml-3">YouTube</span>
           </div>
         </div>
@@ -199,23 +217,40 @@ export default function Media() {
   const headOpacity = useTransform(scrollYProgress, [0, 0.06, 0.32, 0.46], [0, 1, 1, 0])
   const gridLabelOpacity = useTransform(scrollYProgress, [0.6, 0.75], [0, 1])
 
+  // The morph is desktop-and-tablet only. On a phone the sticky stage has to
+  // fit six cards into 100svh, which forced a 2-up grid of 150px-wide tiles —
+  // a YouTube facade at that size is unreadable and unclickable. Phones also
+  // pay the worst price for 420 particles plus 700 line segments a frame.
+  // Below 768px the section becomes an ordinary stacked grid instead.
   const [still, setStill] = useState(false)
   useEffect(() => {
-    setStill(window.matchMedia('(prefers-reduced-motion: reduce)').matches)
+    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)')
+    const narrow = window.matchMedia('(max-width: 767px)')
+    const sync = () => setStill(reduce.matches || narrow.matches)
+    sync()
+    reduce.addEventListener('change', sync)
+    narrow.addEventListener('change', sync)
+    return () => {
+      reduce.removeEventListener('change', sync)
+      narrow.removeEventListener('change', sync)
+    }
   }, [])
 
-  // Reduced-motion / fallback: plain grid
+  // Reduced-motion / small-screen fallback: plain grid, no canvas, no pin
   if (still) {
     return (
-      <section id="media" className="block-dark relative py-[14vh] px-6 md:px-12">
+      <section id="media" className="relative py-[12vh] px-6 md:px-12">
         <div className="max-w-[1400px] mx-auto">
           <p className="label mb-4">Media</p>
-          <h2 className="font-display font-semibold text-ivory mb-14" style={{ fontSize: 'clamp(2.4rem, 5vw, 5rem)', letterSpacing: '-0.03em' }}>
+          <h2
+            className="font-display font-semibold text-ink mb-10 md:mb-14"
+            style={{ fontSize: 'clamp(2rem, 5vw, 5rem)', letterSpacing: '-0.03em', lineHeight: 1.02 }}
+          >
             Stories in <span className="text-gold">motion.</span>
           </h2>
-          <div className="grid md:grid-cols-3 gap-6">
+          <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-5 md:gap-6">
             {mediaReels.map((m, i) => (
-              <Card key={i} m={m} i={0} progress={scrollYProgress} refFn={() => {}} />
+              <Card key={i} m={m} i={0} progress={scrollYProgress} refFn={() => {}} pinned={false} />
             ))}
           </div>
         </div>
@@ -224,27 +259,24 @@ export default function Media() {
   }
 
   return (
-    // block-dark: the particle constellation is drawn in orange on transparent
-    // and only reads against a black field — this is one of the two moments the
-    // practice side goes dark on purpose.
-    <section ref={sectionRef} id="media" className="block-dark relative h-[300vh]">
+    <section ref={sectionRef} id="media" className="relative h-[300vh]">
       <div className="sticky top-0 h-screen overflow-hidden">
         <MorphCanvas progress={scrollYProgress} cardRefs={cardRefs} />
 
         {/* opening state: the mind */}
         <motion.div style={{ opacity: headOpacity }} className="absolute inset-x-0 top-[9vh] text-center px-6 pointer-events-none z-20">
           <p className="label mb-4">Media</p>
-          <h2 className="font-display font-semibold text-ivory" style={{ fontSize: 'clamp(2.2rem, 4.5vw, 4.5rem)', letterSpacing: '-0.03em', lineHeight: 1 }}>
+          <h2 className="font-display font-semibold text-ink" style={{ fontSize: 'clamp(2.2rem, 4.5vw, 4.5rem)', letterSpacing: '-0.03em', lineHeight: 1 }}>
             One mind. <span className="text-gold">Many mediums.</span>
           </h2>
-          <p className="mt-5 text-fog max-w-[420px] mx-auto text-sm md:text-base">
-            Keep scrolling — watch the thinking disperse into the work.
+          <p className="mt-5 text-ink/65 max-w-[420px] mx-auto text-sm md:text-base">
+            Keep scrolling - watch the thinking disperse into the work.
           </p>
         </motion.div>
 
         {/* end state: the work */}
         <motion.p style={{ opacity: gridLabelOpacity }} className="absolute inset-x-0 top-[8vh] text-center label pointer-events-none">
-          Stories in motion — reels & showreels
+          Stories in motion - reels & showreels
         </motion.p>
 
         <div className="absolute inset-x-0 top-[22vh] bottom-[8vh] flex items-center px-5 md:px-16">

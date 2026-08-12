@@ -62,7 +62,7 @@ export default function Preloader({ onDone }: { onDone: () => void }) {
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.2, duration: 0.6 }}
             >
-              Sukhmani — Growth &amp; Marketing Leadership
+              Sukhmani - Growth &amp; Marketing Leadership
             </motion.p>
             <h2 className="font-serif text-ivory text-center" style={{ fontSize: 'clamp(2rem, 6vw, 4.5rem)', lineHeight: 1.05 }}>
               {LINE.map((w, i) => (

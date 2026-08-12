@@ -44,7 +44,7 @@ export default function IntroStrip() {
             viewport={{ once: true, margin: '-15% 0px' }}
             transition={{ duration: 0.8, delay: 0.12, ease }}
           >
-            {/* hairline grid rather than floating cards — flat surfaces need
+            {/* hairline grid rather than floating cards - flat surfaces need
                 edges, not shadows */}
             {stats.map((s) => (
               <div key={s.label} className="bg-bone px-5 py-6">

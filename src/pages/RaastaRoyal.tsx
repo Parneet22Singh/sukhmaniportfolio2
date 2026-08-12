@@ -4,8 +4,8 @@ import CampaignPage from '../components/CampaignPage'
 import YouTube from '../components/YouTube'
 import { raastaRoyal as data } from '../data/portfolio'
 
-const GOLD = '#E7C873' // pale gold — decorative (sprockets, canisters, glows)
-const GOLD_INK = '#EBCE84' // bright gold — readable accent text on dark
+const GOLD = '#E7C873' // pale gold - decorative (sprockets, canisters, glows)
+const GOLD_INK = '#EBCE84' // bright gold - readable accent text on dark
 const ease = [0.22, 1, 0.36, 1] as const
 
 function Reveal({ children, className = '', delay = 0 }: { children: React.ReactNode; className?: string; delay?: number }) {
@@ -32,7 +32,7 @@ function Sprockets() {
 export default function RaastaRoyal() {
   return (
     <CampaignPage currentSlug="raasta-royal" accent={GOLD}>
-      {/* ————— HERO: title card ————— */}
+      {/* ----- HERO: title card ----- */}
       <section className="relative pt-40 pb-[8vh] overflow-hidden">
         <div className="absolute inset-0 opacity-[0.16]" style={{ background: `radial-gradient(ellipse 55% 40% at 50% 10%, #6B4E9E, transparent 65%), radial-gradient(ellipse 40% 30% at 50% 55%, ${GOLD}33, transparent 70%)` }} />
         <div className="relative max-w-[1100px] mx-auto px-6 text-center">
@@ -59,21 +59,21 @@ export default function RaastaRoyal() {
         </div>
       </section>
 
-      {/* ————— NOW SCREENING: letterboxed film ————— */}
+      {/* ----- NOW SCREENING: letterboxed film ----- */}
       <section className="relative py-[8vh] px-6 md:px-12">
         <div className="max-w-[1050px] mx-auto">
           <Reveal>
             <p className="label text-center mb-8 tracking-[0.3em]" style={{ color: GOLD_INK }}>◆ Now Screening ◆</p>
             <div className="rounded-xl overflow-hidden shadow-soft border border-ivory/10 bg-black">
               <Sprockets />
-              <YouTube id={data.videoId} start={data.videoStart} title="Raasta bhi Royal — brand film" className="!rounded-none" />
+              <YouTube id={data.videoId} start={data.videoStart} title="Raasta bhi Royal - brand film" className="!rounded-none" />
               <Sprockets />
             </div>
           </Reveal>
         </div>
       </section>
 
-      {/* ————— CREDITS ————— */}
+      {/* ----- CREDITS ----- */}
       <section className="relative py-[10vh] px-6 border-y border-ivory/10">
         <div className="max-w-[640px] mx-auto">
           <Reveal className="text-center mb-14">
@@ -95,7 +95,7 @@ export default function RaastaRoyal() {
         </div>
       </section>
 
-      {/* ————— COMING ATTRACTIONS: reel slots ————— */}
+      {/* ----- COMING ATTRACTIONS: reel slots ----- */}
       <section className="relative py-[10vh] px-6 md:px-12">
         <div className="max-w-[1100px] mx-auto">
           <Reveal className="text-center mb-14">

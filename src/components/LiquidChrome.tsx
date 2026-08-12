@@ -15,7 +15,7 @@ interface Props {
 // single-sample (no 3×3 AA loop), half-resolution render, ~40fps cap,
 // paused when scrolled offscreen, disabled for reduced-motion.
 export default function LiquidChrome({
-  baseColor = [0.72, 0.66, 0.94], // soft lavender — matches the violet accent
+  baseColor = [0.72, 0.66, 0.94], // soft lavender - matches the violet accent
   speed = 0.3,
   amplitude = 0.3,
   frequencyX = 3,

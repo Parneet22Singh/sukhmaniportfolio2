@@ -20,6 +20,7 @@ const RaastaRoyal = lazy(() => import('./pages/RaastaRoyal'))
 const Capabilities = lazy(() => import('./pages/Capabilities'))
 const Approach = lazy(() => import('./pages/Approach'))
 const AboutPage = lazy(() => import('./pages/AboutPage'))
+const MediaPage = lazy(() => import('./pages/MediaPage'))
 
 
 // Buttery inertia scroll (lerp 0.1), disabled for reduced-motion users.
@@ -55,6 +56,7 @@ createRoot(document.getElementById('root')!).render(
             <Route path="/capabilities" element={<Capabilities />} />
             <Route path="/approach" element={<Approach />} />
             <Route path="/about" element={<AboutPage />} />
+            <Route path="/media" element={<MediaPage />} />
             <Route path="/ooh-campaign" element={<OOHCampaign />} />
             <Route path="/parking-ticket" element={<ParkingTicket />} />
             <Route path="/mothers-day" element={<MothersDay />} />

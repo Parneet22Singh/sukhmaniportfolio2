@@ -147,10 +147,10 @@ export default function BlobMorph({
           The back layer is the same orange at lower alpha, which reads as a
           trailing edge without introducing a second hue. */}
       <svg viewBox="0 0 1000 1000" preserveAspectRatio="none" className="absolute inset-0 w-full h-full">
-        {/* pool — rises from the bottom */}
+        {/* pool - rises from the bottom */}
         <path ref={backRef} d={pool(0, 0.08, 0.9)} fill="var(--violet)" opacity={0.4} />
         <path ref={frontRef} d={pool(0, 0, 1)} fill="var(--violet)" />
-        {/* curtain — drips down from the top, same fill */}
+        {/* curtain - drips down from the top, same fill */}
         <path ref={curtainRef} d={curtain(0)} fill="var(--violet)" />
       </svg>
     </div>

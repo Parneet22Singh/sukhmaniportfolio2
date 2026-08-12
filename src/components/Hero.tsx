@@ -176,7 +176,7 @@ function Beat({
             style={{ letterSpacing: '0.26em', opacity: kickOpacity, x: kickX }}
           >
             <span className="tabular-nums">0{index + 1}</span>
-            <span className="mx-3 opacity-40">—</span>
+            <span className="mx-3 opacity-40">-</span>
             {kicker}
           </motion.p>
 
@@ -334,7 +334,7 @@ export default function Hero({ started }: { started: boolean }) {
           {profile.discipline} · India → Sydney
         </motion.p>
 
-        {/* SUKHMANI — reveals dead-centre on load, then everything after is scroll */}
+        {/* SUKHMANI - reveals dead-centre on load, then everything after is scroll */}
         <motion.div
           style={{ opacity: titleOpacity }}
           className="absolute inset-0 z-10 pointer-events-none select-none"
@@ -372,7 +372,7 @@ export default function Hero({ started }: { started: boolean }) {
           </motion.div>
         </motion.div>
 
-        {/* portrait — scroll-triggered: absent at rest, arrives, then clears */}
+        {/* portrait - scroll-triggered: absent at rest, arrives, then clears */}
         <div className="absolute inset-x-0 bottom-0 z-20 flex justify-center items-end pointer-events-none">
           <motion.div
             style={{
@@ -383,7 +383,7 @@ export default function Hero({ started }: { started: boolean }) {
             <div style={{ height: 'clamp(360px, 78vh, 760px)' }} className="flex items-end justify-center">
               <img
                 src="/portrait.png"
-                alt={`${profile.name} — ${profile.title}`}
+                alt={`${profile.name} - ${profile.title}`}
                 className="h-full w-auto max-w-[94vw] object-contain object-bottom"
                 /* on bone the heavy black drop-shadow read as grime; a light
                    contrast lift is all the portrait needs to sit on the page */
@@ -399,7 +399,7 @@ export default function Hero({ started }: { started: boolean }) {
           </motion.div>
         </div>
 
-        {/* liquid melt — rises behind the closing beat */}
+        {/* liquid melt - rises behind the closing beat */}
         <BlobMorph triggerRef={wrapRef} from={MELT_FROM} to={1} />
 
         {/* availability pill */}
@@ -440,10 +440,10 @@ export default function Hero({ started }: { started: boolean }) {
           />
         </motion.div>
 
-        {/* ——— the journey ——— */}
+        {/* --- the journey --- */}
         <Rail p={p} />
 
-        {/* below the melt's z-[60] — the lava is meant to swallow this copy */}
+        {/* below the melt's z-[60] - the lava is meant to swallow this copy */}
         <div className="absolute inset-0 z-30 pointer-events-none">
           {heroJourney.map((b, i) => (
             <Beat key={b.line} p={p} index={i} kicker={b.kicker} line={b.line} sub={b.sub} />

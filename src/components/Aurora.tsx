@@ -9,10 +9,14 @@ import { useLocation } from 'react-router-dom'
 // had an edge. Now it is a single flat fill, and the colour work is done by the
 // sections themselves.
 //
-// The practice routes run on bone. The campaign routes stay dark — that work is
+// The practice routes run on sand. The campaign routes stay dark — that work is
 // image-led and the photography needs a black field — so the surface flips via
 // a data attribute on <html> and the CSS variables invert underneath. Campaign
 // pages therefore needed no changes at all.
+//
+// /media is NOT in this list. It ran dark briefly and read as a different
+// website; the particle constellation was recoloured to ink-on-sand instead
+// so the media route sits in the same room as the rest of the practice.
 const DARK_ROUTES = ['/ooh-campaign', '/parking-ticket', '/mothers-day', '/raasta-royal']
 
 export default function Aurora() {

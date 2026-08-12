@@ -48,7 +48,7 @@ export default function MarketingFlow() {
           />
         ))}
 
-        {/* ——— signal in ——— */}
+        {/* --- signal in --- */}
         <text x="18" y="28" fill="#9a9088" fontSize="8" letterSpacing="2.4" fontFamily="inherit">
           SIGNAL IN
         </text>
@@ -74,7 +74,7 @@ export default function MarketingFlow() {
           </motion.g>
         ))}
 
-        {/* ——— channels converge on one narrative ——— */}
+        {/* --- channels converge on one narrative --- */}
         {BOX_X.map((x, i) => {
           const sx = x + BOX_W / 2
           const d = `M ${sx},80 C ${sx},112 ${NODE.x},116 ${NODE.x},${NODE.y - 16}`
@@ -95,7 +95,7 @@ export default function MarketingFlow() {
           )
         })}
 
-        {/* ——— the narrative node ——— */}
+        {/* --- the narrative node --- */}
         <motion.g
           initial={{ opacity: 0, scale: 0.9 }}
           animate={inView ? { opacity: 1, scale: 1 } : undefined}
@@ -115,7 +115,7 @@ export default function MarketingFlow() {
           </text>
         </motion.g>
 
-        {/* ——— out into the funnel ——— */}
+        {/* --- out into the funnel --- */}
         <motion.path
           d={`M ${NODE.x},${NODE.y + 16} L ${NODE.x},214`}
           stroke="rgba(245,240,234,0.20)" strokeWidth="1" fill="none"
@@ -128,7 +128,7 @@ export default function MarketingFlow() {
           REVENUE OUT
         </text>
 
-        {/* ——— funnel stages ——— */}
+        {/* --- funnel stages --- */}
         {STAGES.map((s, i) => {
           const y = 232 + i * 44
           return (

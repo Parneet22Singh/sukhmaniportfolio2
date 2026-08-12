@@ -9,7 +9,7 @@ export default function AboutPage() {
       kicker="The Background"
       title="Nine years,"
       accent="three mandates."
-      lede="Not advising from the outside — owning the number, the budget and the teams, across India, the Middle East, Canada and Australia."
+      lede="Not advising from the outside - owning the number, the budget and the teams, across India, the Middle East, Canada and Australia."
     >
       <About />
       <Experience />

@@ -45,7 +45,7 @@ export default function QuietField() {
         style={{ bottom: '2%', right: '-10%', width: '52vw', height: '52vw', y: glowBY }}
       />
 
-      {/* plot grid — hairlines, drawn edge to edge with no mask fade */}
+      {/* plot grid - hairlines, drawn edge to edge with no mask fade */}
       <motion.div
         className="absolute inset-x-0 opacity-70"
         style={{
@@ -57,7 +57,7 @@ export default function QuietField() {
         }}
       />
 
-      {/* the trend line — a dashboard remembered, not displayed */}
+      {/* the trend line - a dashboard remembered, not displayed */}
       <motion.svg
         viewBox="0 0 100 100"
         preserveAspectRatio="none"

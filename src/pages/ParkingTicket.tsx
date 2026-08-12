@@ -11,7 +11,7 @@ const ease = [0.22, 1, 0.36, 1] as const
 function CautionTape({ text, reverse = false }: { text: string; reverse?: boolean }) {
   return (
     <div className={`overflow-hidden py-3 select-none ${reverse ? '-rotate-1' : 'rotate-1'}`} style={{ background: ORANGE }} aria-hidden>
-      <div className="flex shrink-0 gap-10 animate-marquee whitespace-nowrap" style={reverse ? { animationDirection: 'reverse', animationDuration: '22s' } : { animationDuration: '22s' }}>
+      <div className="flex shrink-0 gap-10 animate-marquee whitespace-nowrap" style={reverse ? { animationDirection: 'reverse', animationDuration: '3s' } : { animationDuration: '3s' }}>
         {Array.from({ length: 14 }).map((_, i) => (
           <span key={i} className="font-mono font-bold text-[13px] tracking-[0.3em] text-[#231D33] uppercase">
             {text} ⚠
@@ -38,7 +38,7 @@ export default function ParkingTicket() {
 
   return (
     <CampaignPage currentSlug="parking-ticket" accent={ORANGE}>
-      {/* ————— HERO: YOU'VE BEEN TICKETED ————— */}
+      {/* ----- HERO: YOU'VE BEEN TICKETED ----- */}
       <section className="relative pt-36 pb-[10vh] overflow-hidden">
         <div className="absolute inset-0 opacity-[0.14]" style={{ background: `radial-gradient(ellipse 70% 50% at 50% 20%, ${ORANGE}, transparent 70%)` }} />
 
@@ -52,14 +52,14 @@ export default function ParkingTicket() {
             <span style={{ color: ORANGE }}>ticketed.</span>
           </h1>
           <p className="mt-8 max-w-[520px] text-fog leading-relaxed text-lg">
-            <em className="text-ivory not-italic font-medium">"{data.officialName}"</em> — {data.description}
+            <em className="text-ivory not-italic font-medium">"{data.officialName}"</em> - {data.description}
           </p>
         </div>
       </section>
 
       <CautionTape text="Violation · Occupying space you don't own" />
 
-      {/* ————— THE TICKET ————— */}
+      {/* ----- THE TICKET ----- */}
       <section className="relative py-[12vh] px-6">
         <motion.div
           ref={ticketRef}
@@ -115,7 +115,7 @@ export default function ParkingTicket() {
         </motion.div>
       </section>
 
-      {/* ————— PENALTY SCHEDULE (stats) ————— */}
+      {/* ----- PENALTY SCHEDULE (stats) ----- */}
       <section className="relative border-y border-ivory/10">
         <div className="max-w-[1400px] mx-auto grid grid-cols-2 md:grid-cols-4">
           {data.stats.map((s, i) => (
@@ -127,7 +127,7 @@ export default function ParkingTicket() {
         </div>
       </section>
 
-      {/* ————— EXHIBIT A: the film ————— */}
+      {/* ----- EXHIBIT A: the film ----- */}
       <section className="relative py-[12vh] px-6 md:px-12">
         <div className="max-w-[1000px] mx-auto">
           <Sect>
@@ -144,7 +144,7 @@ export default function ParkingTicket() {
         </div>
       </section>
 
-      {/* ————— WITNESS STATEMENTS (quotes) ————— */}
+      {/* ----- WITNESS STATEMENTS (quotes) ----- */}
       <section className="relative pb-[12vh] px-6 md:px-12">
         <div className="max-w-[1200px] mx-auto">
           <Sect><p className="label mb-10" style={{ color: ORANGE }}>Witness Statements</p></Sect>
@@ -167,7 +167,7 @@ export default function ParkingTicket() {
 
       <CautionTape text="3,00,000+ interactions · 3 cities · 3 days" reverse />
 
-      {/* ————— CASE FILES (press) ————— */}
+      {/* ----- CASE FILES (press) ----- */}
       <section className="relative py-[12vh] px-6 md:px-12">
         <div className="max-w-[1200px] mx-auto">
           <Sect>

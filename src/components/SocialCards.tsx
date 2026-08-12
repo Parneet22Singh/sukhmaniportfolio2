@@ -242,7 +242,11 @@ export default function SocialCards({ cards }: { cards: CardItem[] }) {
   return (
     <section className="flex flex-col items-center w-full py-4 lg:py-8 px-4 md:px-8 relative z-20">
       <div className="flex items-center justify-center w-full max-w-[90rem]">
-        <div ref={containerRef} className="fan-layout flex justify-center items-center w-full max-w-[80rem]">
+        {/* overflow-x-clip: the outermost fanned card sticks out past the
+            container and was widening the document by ~70px, which let the
+            whole page pan sideways on touch. Clip, don't hide — `hidden` on a
+            block establishes a scroll container and would strand the cards. */}
+        <div ref={containerRef} className="fan-layout overflow-x-clip flex justify-center items-center w-full max-w-[80rem]">
           {cards.map((card, index) => {
             const image = (
               <div className="relative w-full h-full overflow-hidden rounded-[0.7rem]">

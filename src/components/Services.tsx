@@ -48,7 +48,7 @@ export default function Services() {
     <section id="capabilities" className="relative overflow-hidden py-[16vh] px-6 md:px-12">
       <div className="max-w-[1500px] mx-auto space-y-[15vh]">
 
-        {/* ——— 01 · DIAGNOSIS ——— */}
+        {/* --- 01 · DIAGNOSIS --- */}
         <Moment>
           <Ghost n="01" className="top-[-6vw] right-0" />
           <div className="md:w-[60%] relative z-10">
@@ -71,7 +71,7 @@ export default function Services() {
           </div>
         </Moment>
 
-        {/* ——— 02 · DEMAND — coded marketing schematic + gold-block reveal ——— */}
+        {/* --- 02 · DEMAND - coded marketing schematic + gold-block reveal --- */}
         <Moment className="md:flex md:items-center md:gap-[5%]">
           <Ghost n="02" className="top-[-5vw] left-0" />
           <motion.div
@@ -98,7 +98,7 @@ export default function Services() {
               Stories that Sell
             </motion.h3>
             <motion.p variants={child} className="mt-7 max-w-[520px] text-ink/65 leading-relaxed">
-              One narrative, carried across OOH, film, creator, social, search and events — so every channel compounds
+              One narrative, carried across OOH, film, creator, social, search and events - so every channel compounds
               the same idea instead of five channels each starting from scratch.
             </motion.p>
             <motion.p variants={child} className="mt-7 max-w-[520px] text-ink/65 leading-relaxed">
@@ -108,7 +108,7 @@ export default function Services() {
           </div>
         </Moment>
 
-        {/* ——— 03 · MEASUREMENT ——— */}
+        {/* --- 03 · MEASUREMENT --- */}
         <Moment className="text-center">
           <QuietField />
           <Ghost n="03" className="top-[-7vw] left-1/2 -translate-x-1/2" />
@@ -122,13 +122,13 @@ export default function Services() {
               Measured Outcomes
             </motion.h3>
             <motion.p variants={child} className="mt-7 max-w-[620px] mx-auto text-ink/65 leading-relaxed">
-              Work that cannot be measured cannot be defended, repeated or funded — it quietly dies in budget review.
+              Work that cannot be measured cannot be defended, repeated or funded - it quietly dies in budget review.
               So attribution gets wired to pipeline before the campaign goes live, not after someone asks.
             </motion.p>
 
             <motion.div variants={child} className="mt-14 grid md:grid-cols-3 gap-4 text-left">
               {[
-                { t: 'Track', d: 'Live dashboards and MIS reporting across every channel and market — read by leadership, not filed.' },
+                { t: 'Track', d: 'Live dashboards and MIS reporting across every channel and market - read by leadership, not filed.' },
                 { t: 'Attribute', d: 'Lead attribution and ROI analysis that tie spend to pipeline, so budget conversations use evidence.' },
                 { t: 'Decide', d: 'Consumer intelligence and structured testing that tell you what to stop, not just what to start.' },
               ].map((m, i) => (
@@ -143,7 +143,7 @@ export default function Services() {
         </Moment>
       </div>
 
-      {/* ——— the full capability set ——— */}
+      {/* --- the full capability set --- */}
       <div className="relative max-w-[1500px] mx-auto mt-[18vh]">
         <Moment className="mb-[8vh]">
           <motion.p variants={child} className="label mb-5">Where I can help</motion.p>

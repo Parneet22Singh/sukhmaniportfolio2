@@ -3,7 +3,7 @@ import { Link, useLocation } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
 import { campaignIndex, profile } from '../data/portfolio'
 
-const CHARS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ·—'
+const CHARS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ·-'
 
 // Text-scramble on hover, resolves left→right.
 function Scramble({ text }: { text: string }) {
@@ -43,6 +43,7 @@ function Scramble({ text }: { text: string }) {
 const NAV = [
   { label: 'CAPABILITIES', to: '/capabilities' },
   { label: 'APPROACH', to: '/approach' },
+  { label: 'MEDIA', to: '/media' },
   { label: 'ABOUT', to: '/about' },
 ]
 
@@ -88,8 +89,10 @@ export default function Nav() {
             Sukhmani<span className="text-gold">®</span>
           </Link>
 
-          {/* Desktop */}
-          <div className="hidden md:flex items-center gap-8">
+          {/* Desktop. lg, not md: the burger below is lg:hidden, so an md
+              breakpoint here rendered BOTH the full menu and the burger at
+              every width from 768 to 1023. */}
+          <div className="hidden lg:flex items-center gap-8">
             {/* Campaigns dropdown */}
             <div className="relative" onMouseEnter={openDrop} onMouseLeave={closeDrop}>
               <button onClick={() => setDrop((v) => !v)} className="label u-link opacity-60 hover:opacity-100 transition-colors">
@@ -144,7 +147,13 @@ export default function Nav() {
           </div>
 
           {/* Mobile burger */}
-          <button className="lg:hidden flex flex-col gap-1.5 p-2" aria-label="Menu" onClick={() => setOpen(!open)}>
+          {/* -mr-3 keeps the optical alignment while the padding grows the
+              hit area to 44px, which is the minimum comfortable touch target */}
+          <button
+            className="lg:hidden flex flex-col justify-center items-end gap-1.5 p-3 -mr-3 min-w-[44px] min-h-[44px]"
+            aria-label="Menu"
+            onClick={() => setOpen(!open)}
+          >
             <span className={`block w-6 h-px bg-current transition-transform duration-300 ${open ? 'translate-y-[3.5px] rotate-45' : ''}`} />
             <span className={`block w-6 h-px bg-current transition-transform duration-300 ${open ? '-translate-y-[3.5px] -rotate-45' : ''}`} />
           </button>

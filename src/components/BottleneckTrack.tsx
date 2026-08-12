@@ -62,7 +62,7 @@ export default function BottleneckTrack() {
   return (
     <section ref={sectionRef} id="bottlenecks" className="relative py-[14vh] px-6 md:px-12 overflow-hidden">
       <div className="max-w-[1300px] mx-auto">
-        {/* short header — the detail lives on /capabilities */}
+        {/* short header - the detail lives on /capabilities */}
         <motion.div
           className="max-w-[760px] mb-[7vh]"
           initial={{ opacity: 0, y: 34 }}
@@ -79,7 +79,7 @@ export default function BottleneckTrack() {
           </h2>
         </motion.div>
 
-        {/* ——— desktop: the rolling track ——— */}
+        {/* --- desktop: the rolling track --- */}
         <div className="hidden md:block relative">
           <svg viewBox={`0 0 ${VB.w} ${VB.h}`} className="w-full h-auto overflow-visible" aria-hidden>
             {/* the track */}
@@ -158,7 +158,7 @@ export default function BottleneckTrack() {
           })}
         </div>
 
-        {/* ——— mobile: same idea, vertical rail ——— */}
+        {/* --- mobile: same idea, vertical rail --- */}
         <div className="md:hidden relative pl-8">
           <div className="absolute left-[7px] top-2 bottom-2 w-px bg-ink/15" aria-hidden />
           <motion.div

@@ -4,8 +4,6 @@ import Preloader from './components/Preloader'
 import Hero from './components/Hero'
 import IntroStrip from './components/IntroStrip'
 import BottleneckTrack from './components/BottleneckTrack'
-import Media from './components/Media'
-import FilmSeries from './components/FilmSeries'
 import ExploreCards from './components/ExploreCards'
 import Contact from './components/Contact'
 
@@ -22,10 +20,8 @@ export default function Home() {
       <Hero started={started} />
       <IntroStrip />
       <BottleneckTrack />
-      {/* the dismantling brain — moved here from /about */}
-      <Media />
-      {/* TVCs + Meri Wali Home Story — both play in-page */}
-      <FilmSeries />
+      {/* the dismantling brain and the film work now have their own route,
+          /media — the homepage links to it from the last card instead */}
       <ExploreCards />
       <Contact />
     </div>

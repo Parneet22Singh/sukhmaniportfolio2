@@ -44,7 +44,7 @@ export default function Contact() {
           transition={{ duration: 0.8, delay: 0.2 }}
         >
           One conversation is usually enough to tell whether the problem is the marketing or something underneath it.
-          No deck required — just what you are seeing and what you have already tried.
+          No deck required - just what you are seeing and what you have already tried.
         </motion.p>
 
         <motion.div
@@ -55,14 +55,14 @@ export default function Contact() {
           <Magnetic className="mt-14">
             <a
               href={`mailto:${profile.email}`}
-              className="u-link font-display text-xl md:text-3xl text-gold break-all"
+              className="u-link inline-block py-2 font-display text-xl md:text-3xl text-gold break-all"
               style={{ letterSpacing: '-0.01em' }}
             >
               {profile.email}
             </a>
           </Magnetic>
 
-          {/* Both numbers — she is reachable in either market through the move */}
+          {/* Both numbers - she is reachable in either market through the move */}
           <div className="mt-12 flex items-center justify-center gap-3 flex-wrap">
             {profile.phones.map((ph) => (
               <a
@@ -93,7 +93,7 @@ export default function Contact() {
           animate={inView ? { opacity: 1 } : {}}
           transition={{ duration: 0.8, delay: 0.5 }}
         >
-          <span className="label">© 2026 Sukhmani — {profile.discipline}</span>
+          <span className="label">© 2026 Sukhmani - {profile.discipline}</span>
           <span className="label"><Marked>Gurugram, India → Sydney, Australia</Marked></span>
         </motion.footer>
       </div>

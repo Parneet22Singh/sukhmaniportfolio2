@@ -31,7 +31,7 @@ function Reveal({ children, className = '', delay = 0 }: { children: React.React
 export default function MothersDay() {
   return (
     <CampaignPage currentSlug="mothers-day" accent={ROSE}>
-      {/* ————— HERO ————— */}
+      {/* ----- HERO ----- */}
       <section className="relative pt-36 pb-[10vh] overflow-hidden">
         <div className="absolute inset-0 opacity-[0.14]" style={{ background: `radial-gradient(ellipse 60% 45% at 50% 12%, ${ROSE}, transparent 65%)` }} />
         <div className="relative max-w-[1100px] mx-auto px-6 md:px-12 text-center">
@@ -52,19 +52,19 @@ export default function MothersDay() {
         </div>
       </section>
 
-      {/* ————— THE FILM ————— */}
+      {/* ----- THE FILM ----- */}
       <section className="relative pb-[12vh] px-6 md:px-12">
         <div className="max-w-[980px] mx-auto">
           <Reveal>
             <div className="relative rounded-2xl overflow-hidden shadow-soft border" style={{ borderColor: `${ROSE}33` }}>
               <YouTube id={data.videoId} title="Mother's Day campaign film" className="!rounded-none" />
             </div>
-            <p className="label text-center mt-6">The campaign film — gifting the first home</p>
+            <p className="label text-center mt-6">The campaign film - gifting the first home</p>
           </Reveal>
         </div>
       </section>
 
-      {/* ————— SIX VOICES ————— */}
+      {/* ----- SIX VOICES ----- */}
       <section className="relative py-[10vh] px-6 md:px-12 border-t border-ivory/10">
         <div className="max-w-[1300px] mx-auto">
           <Reveal className="text-center mb-6">
@@ -75,11 +75,11 @@ export default function MothersDay() {
               Six voices. <em style={{ color: ROSE }}>One feeling.</em>
             </h2>
             <p className="mt-5 text-fog max-w-[480px] mx-auto">
-              No media spend — just six colleagues telling their own mother's story, in their own words, on their own feeds.
+              No media spend - just six colleagues telling their own mother's story, in their own words, on their own feeds.
             </p>
           </Reveal>
 
-          {/* draggable UGC cards — gradient placeholders until post screenshots are added */}
+          {/* draggable UGC cards - gradient placeholders until post screenshots are added */}
           <PhotoGallery
             photos={data.posts.map((p, i) => ({
               label: p.name,

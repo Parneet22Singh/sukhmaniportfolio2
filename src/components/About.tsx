@@ -29,7 +29,7 @@ export default function About() {
 
   return (
     <section id="about" className="relative overflow-hidden">
-      {/* ————— THE TENSION ————— */}
+      {/* ----- THE TENSION ----- */}
       <div ref={tensionRef} className="relative grid md:grid-cols-[55%_45%] gap-16 md:gap-0 px-6 md:px-12 py-[20vh] max-w-[1500px] mx-auto">
         {/* vertical gold line between columns */}
         <motion.div
@@ -73,14 +73,14 @@ export default function About() {
           <Reveal delay={0.4}>
             <p className="mt-8 max-w-[420px] text-ink/65 leading-relaxed">
               Nine years running growth across India, the Middle East, Canada and Australia taught me that the brief is rarely the
-              problem. I work back from the number to find where it actually breaks — then fix that, and build the
+              problem. I work back from the number to find where it actually breaks - then fix that, and build the
               campaign the business needed in the first place.
             </p>
           </Reveal>
         </div>
       </div>
 
-      {/* ————— ABOUT / EDUCATION ————— */}
+      {/* ----- ABOUT / EDUCATION ----- */}
       <div className="relative px-6 md:px-12 pb-[16vh] max-w-[1500px] mx-auto">
         <Reveal><p className="label mb-14">About</p></Reveal>
 
@@ -112,7 +112,7 @@ export default function About() {
             </Reveal>
           </div>
 
-          {/* education — hairline editorial rows */}
+          {/* education - hairline editorial rows */}
           <div>
             <Reveal><p className="label-gold mb-6">Education</p></Reveal>
             {education.map((e, i) => (
