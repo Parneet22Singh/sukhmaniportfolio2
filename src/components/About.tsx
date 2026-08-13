@@ -1,7 +1,7 @@
 import { useRef, type ReactNode } from 'react'
 import { motion, useInView, useScroll, useTransform } from 'framer-motion'
 import Marked from './Marked'
-import { bio, education, profile } from '../data/portfolio'
+import { bio, education } from '../data/portfolio'
 
 const ease = [0.22, 1, 0.36, 1] as const
 
@@ -100,15 +100,6 @@ export default function About() {
                   <p key={p.slice(0, 24)} className="text-ink/65 leading-relaxed"><Marked>{p}</Marked></p>
                 ))}
               </div>
-            </Reveal>
-            <Reveal delay={0.25}>
-              <p className="mt-10 inline-flex items-center gap-3 border border-gold/30 bg-gold/5 rounded-full px-5 py-3 text-gold text-sm font-medium">
-                <span className="relative flex h-2 w-2">
-                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-gold opacity-60" />
-                  <span className="relative inline-flex rounded-full h-2 w-2 bg-gold" />
-                </span>
-                <Marked>{profile.statusBadge}</Marked>
-              </p>
             </Reveal>
           </div>
 

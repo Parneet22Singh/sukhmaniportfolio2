@@ -1,7 +1,8 @@
-import { useRef } from 'react'
+import { useRef, useState } from 'react'
 import { motion, useInView } from 'framer-motion'
 import CampaignPage from '../components/CampaignPage'
 import SocialCards from '../components/SocialCards'
+import Lightbox from '../components/Lightbox'
 import { oohCampaign as data } from '../data/portfolio'
 
 const AMBER = '#F5C518' // bright - bands, glows, borders
@@ -27,6 +28,8 @@ function Reveal({ children, className = '', delay = 0 }: { children: React.React
 }
 
 export default function OOHCampaign() {
+  const [shot, setShot] = useState<number | null>(null)
+
   return (
     <CampaignPage currentSlug="ooh-campaign" accent={AMBER}>
       {/* ----- HERO ----- */}
@@ -35,9 +38,9 @@ export default function OOHCampaign() {
         <div className="relative max-w-[1400px] mx-auto px-6 md:px-12">
           <p className="label mb-6" style={{ color: AMBER_INK }}>Square Yards · {data.period} · {data.type}</p>
           <h1 className="font-display font-semibold text-ivory" style={{ fontSize: 'clamp(3rem, 8.5vw, 8.5rem)', lineHeight: 0.92, letterSpacing: '-0.04em' }}>
-            Billboards that got
+            We painted the city
             <br />
-            <span style={{ color: AMBER_INK }}>India talking.</span>
+            <span style={{ color: AMBER_INK }}>yellow.</span>
           </h1>
           <div className="mt-10 flex flex-col md:flex-row md:items-end gap-8 justify-between">
             <p className="max-w-[520px] text-fog leading-relaxed text-lg">{data.theme}</p>
@@ -85,8 +88,11 @@ export default function OOHCampaign() {
           </Reveal>
 
         </div>
-        {/* fanned deck of the actual billboards - drag / paginate / click to open */}
-        <SocialCards cards={data.images.map((img) => ({ imgUrl: img.url, alt: img.caption, linkUrl: img.url }))} />
+        {/* fanned deck of the actual billboards - paginate, click to enlarge */}
+        <SocialCards
+          cards={data.images.map((img) => ({ imgUrl: img.url, alt: img.caption }))}
+          onOpen={setShot}
+        />
       </section>
 
       {/* ----- WHY IT WORKED ----- */}
@@ -108,6 +114,8 @@ export default function OOHCampaign() {
           </Reveal>
         </div>
       </section>
+
+      <Lightbox items={data.images} index={shot} onClose={() => setShot(null)} onIndex={setShot} />
     </CampaignPage>
   )
 }

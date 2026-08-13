@@ -25,6 +25,20 @@ export default function IntroStrip() {
           {profile.title} · <Marked>{profile.company}</Marked>
         </motion.p>
 
+        {/* The Australian market was part of the remit run out of the India
+            office, so it is stated as a market worked rather than folded into
+            the job title, where "Square Yards Australia" would read as an
+            employer she has never actually been on the payroll of. */}
+        <motion.p
+          className="-mt-6 mb-10 text-sm md:text-base"
+          initial={{ opacity: 0, y: 14 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: '-15% 0px' }}
+          transition={{ duration: 0.7, delay: 0.08, ease }}
+        >
+          Market experience includes <Marked>Square Yards Australia</Marked>
+        </motion.p>
+
         <div className="grid gap-14 lg:grid-cols-[1.15fr_1fr] lg:gap-24 lg:items-end">
           <motion.p
             className="font-display font-medium"
@@ -46,10 +60,16 @@ export default function IntroStrip() {
           >
             {/* hairline grid rather than floating cards - flat surfaces need
                 edges, not shadows */}
+            {/* value, then label, then an optional third line - so MBA reads
+                as MBA / Advanced / Sydney School of Business down the card
+                rather than as one run-on caption */}
             {stats.map((s) => (
               <div key={s.label} className="bg-bone px-5 py-6">
                 <p className="font-display font-bold text-2xl md:text-3xl leading-none">{s.value}</p>
                 <p className="label mt-3 !text-[8px] leading-tight">{s.label}</p>
+                {'sub' in s && s.sub && (
+                  <p className="label mt-1 !text-[8px] leading-tight opacity-70">{s.sub}</p>
+                )}
               </div>
             ))}
           </motion.div>

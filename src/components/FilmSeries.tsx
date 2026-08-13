@@ -24,23 +24,17 @@ function Film({ f, i, featured = false }: { f: (typeof filmSeries)[number]; i: n
 
   return (
     <motion.div
+      id={f.id}
+      className="scroll-mt-28"
       initial={{ opacity: 0, y: 40 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: '-12% 0px' }}
       transition={{ duration: 0.75, delay: i * 0.08, ease }}
     >
-      {/* The poster is type, not a still, so it is sized by its content - an
-          aspect-video box is far too short for it at narrow widths and clips
-          the play affordance clean off. The player gets the video ratio. */}
-      <div
-        className={`relative w-full overflow-hidden bg-gold ${
-          playing
-            ? 'aspect-video'
-            : featured
-              ? 'min-h-[420px] md:min-h-[560px]'
-              : 'min-h-[340px] md:min-h-[400px]'
-        }`}
-      >
+      {/* A real still, not a typographic placeholder. A playlist has no
+          thumbnail of its own, so each entry names the video whose frame stands
+          for it and the poster pulls that frame from ytimg. */}
+      <div className={`relative w-full overflow-hidden bg-ink ${featured ? 'aspect-[16/9] md:aspect-[2/1]' : 'aspect-video'}`}>
         {playing ? (
           <iframe
             className="absolute inset-0 w-full h-full"
@@ -55,32 +49,45 @@ function Film({ f, i, featured = false }: { f: (typeof filmSeries)[number]; i: n
             data-cursor="hover"
             aria-label={`Play ${f.title}`}
             onClick={() => setPlaying(true)}
-            className="group absolute inset-0 w-full h-full text-left p-7 md:p-9 flex flex-col justify-between transition-colors duration-300 hover:bg-ink"
+            className="group absolute inset-0 w-full h-full text-left"
           >
-            <div className="flex items-baseline justify-between gap-4 text-ink group-hover:text-bone transition-colors">
-              <span className="label !text-[9px] !text-ink/70 group-hover:!text-bone/70 transition-colors">{f.kicker}</span>
-              <span className="label !text-[9px] !text-ink/70 group-hover:!text-bone/70 transition-colors">{f.meta}</span>
-            </div>
+            <img
+              src={`https://i.ytimg.com/vi/${f.videoId}/maxresdefault.jpg`}
+              srcSet={`https://i.ytimg.com/vi/${f.videoId}/hqdefault.jpg 480w, https://i.ytimg.com/vi/${f.videoId}/maxresdefault.jpg 1280w`}
+              sizes={featured ? '(max-width: 768px) 100vw, 1300px' : '(max-width: 768px) 100vw, 640px'}
+              alt={f.title}
+              loading="lazy"
+              className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-[1.04]"
+            />
+            {/* the scrim is what keeps the type legible over an arbitrary frame */}
+            <span className="absolute inset-0 bg-ink/55 transition-colors duration-300 group-hover:bg-ink/45" />
 
-            <div className="text-ink group-hover:text-bone transition-colors">
-              <h3
-                className="font-display font-semibold"
-                style={{
-                  fontSize: featured ? 'clamp(2rem, 4.6vw, 4rem)' : 'clamp(1.6rem, 3vw, 2.6rem)',
-                  letterSpacing: '-0.03em',
-                  lineHeight: 1.03,
-                }}
-              >
-                {f.title}
-              </h3>
-              <p className="mt-3 max-w-[46ch] text-sm leading-relaxed opacity-75">{f.blurb}</p>
-              <span className="mt-6 inline-flex items-center gap-3 label !text-[9px] !text-ink group-hover:!text-bone transition-colors">
-                <span className="grid place-items-center w-8 h-8 rounded-full border border-current">
-                  <span className="ml-[3px] block h-0 w-0 border-y-[5px] border-l-[8px] border-y-transparent border-l-current" />
-                </span>
-                Play here
+            <span className="absolute inset-0 p-7 md:p-9 flex flex-col justify-between text-bone">
+              <span className="flex items-baseline justify-between gap-4">
+                <span className="label !text-[9px] !text-bone/75">{f.kicker}</span>
+                <span className="label !text-[9px] !text-bone/75">{f.meta}</span>
               </span>
-            </div>
+
+              <span className="block">
+                <span
+                  className="block font-display font-semibold"
+                  style={{
+                    fontSize: featured ? 'clamp(1.8rem, 4.2vw, 3.6rem)' : 'clamp(1.4rem, 2.6vw, 2.2rem)',
+                    letterSpacing: '-0.03em',
+                    lineHeight: 1.03,
+                  }}
+                >
+                  {f.title}
+                </span>
+                <span className="mt-3 block max-w-[46ch] text-sm leading-relaxed text-bone/75">{f.blurb}</span>
+                <span className="mt-6 inline-flex items-center gap-3 label !text-[9px] !text-bone">
+                  <span className="grid place-items-center w-9 h-9 rounded-full bg-gold text-ink">
+                    <span className="ml-[3px] block h-0 w-0 border-y-[6px] border-l-[9px] border-y-transparent border-l-current" />
+                  </span>
+                  Play here
+                </span>
+              </span>
+            </span>
           </button>
         )}
       </div>
@@ -104,7 +111,7 @@ export default function FilmSeries() {
           viewport={{ once: true, margin: '-15% 0px' }}
           transition={{ duration: 0.8, ease }}
         >
-          <p className="label mb-5">Chapter 02 - Film</p>
+          <p className="label mb-5">Film</p>
           <h2
             className="font-display font-semibold text-ink"
             style={{ fontSize: 'clamp(2.2rem, 5vw, 4.6rem)', letterSpacing: '-0.035em', lineHeight: 1 }}

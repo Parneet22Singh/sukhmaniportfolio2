@@ -83,6 +83,10 @@ html[data-surface='light'] .block-dark :is(.text-gold, .label-gold, .text-gradie
   html {
     background-color: var(--bg);
     scroll-behavior: auto;
+    /* The footer is the one dark block on a sand page. Rubber-banding past the
+       end of the document exposed the sand html background underneath it,
+       which read as a blank panel below the footer. */
+    overscroll-behavior-y: none;
   }
   body {
     @apply font-sans antialiased;

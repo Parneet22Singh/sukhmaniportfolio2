@@ -15,8 +15,13 @@ function rand(min: number, max: number) {
   return Math.random() * (max - min) + min
 }
 
-// Draggable, hover-tilt photo card. Falls back to a labelled pastel card
-// when no image src is supplied (e.g. UGC posts without screenshots yet).
+// Hover-tilt photo card. Falls back to a labelled pastel card when no image
+// src is supplied (e.g. UGC posts without screenshots yet).
+//
+// The drag is gone. It never moved anything — dragConstraints pinned all four
+// edges to 0, so a card snapped straight back to its origin — and the
+// touchAction: 'none' it needed swallowed vertical scroll over every card on a
+// phone. The cards are links; they now behave like links.
 function Photo({ photo, direction, size }: { photo: GalleryPhoto; direction: Direction; size: number }) {
   const [rotation, setRotation] = useState(0)
   useEffect(() => {
@@ -35,15 +40,12 @@ function Photo({ photo, direction, size }: { photo: GalleryPhoto; direction: Dir
 
   const card = (
     <motion.div
-      drag
-      dragConstraints={{ left: 0, right: 0, top: 0, bottom: 0 }}
-      whileTap={{ scale: 1.15, zIndex: 9999 }}
+      whileTap={{ scale: 1.04, zIndex: 9999 }}
       whileHover={{ scale: 1.08, rotateZ: 2 * (direction === 'left' ? -1 : 1), zIndex: 9999 }}
-      whileDrag={{ scale: 1.1, zIndex: 9999 }}
       initial={{ rotate: 0 }}
       animate={{ rotate: rotation }}
-      style={{ width: size, height: size, WebkitUserSelect: 'none', userSelect: 'none', touchAction: 'none' }}
-      className="relative shrink-0 cursor-grab active:cursor-grabbing"
+      style={{ width: size, height: size, WebkitUserSelect: 'none', userSelect: 'none' }}
+      className="relative shrink-0"
       draggable={false}
     >
       <div className="relative h-full w-full overflow-hidden rounded-3xl shadow-soft ring-1 ring-white/50">{inner}</div>
@@ -115,7 +117,7 @@ export default function PhotoGallery({
           </div>
         </motion.div>
       </div>
-      <p className="text-center label !text-[10px] text-fog">Drag the cards · click to open</p>
+      <p className="text-center label !text-[10px] text-fog">Click a card to open the post</p>
     </div>
   )
 }

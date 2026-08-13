@@ -58,12 +58,16 @@ function ramp(stops: number[], values: number[]) {
   }
 }
 
-// Beat 03 gets the longest window of the three: a clear stretch on black from
-// 0.70, the melt arriving under it at 0.78, and it stays up at full opacity
-// through the flood so the closing line is the thing left standing on orange.
+// Windows are deliberately DISJOINT, with a small gap between each. They used
+// to abut (beat 02 ran to 0.71 while beat 03 opened at 0.70) and the beats are
+// absolutely positioned on top of one another, so for that overlap both were
+// painted at once and the two statements sat on top of each other. On desktop
+// the overlap was a few pixels of scroll and easy to miss; on a phone, where a
+// single flick covers a fifth of the journey, it landed square in the middle
+// of a swipe every time.
 const BEATS: [number, number][] = [
-  [0.24, 0.48],
-  [0.48, 0.71],
+  [0.22, 0.46],
+  [0.48, 0.68],
   [0.70, 1.0],
 ]
 
@@ -296,7 +300,9 @@ export default function Hero({ started }: { started: boolean }) {
     return (
       <section id="hero" className="relative min-h-[100svh] overflow-hidden flex flex-col justify-center px-6 md:px-12 py-[18vh]">
         <div className="max-w-[1100px] mx-auto text-center">
-          <p className="label mb-8">{profile.discipline} · India → Sydney</p>
+          <p className="label mb-8">
+            {profile.discipline} · <span className="whitespace-nowrap">India → Sydney</span>
+          </p>
           <h1
             className="font-display font-bold text-ink"
             style={{ fontSize: 'clamp(3rem, 12vw, 11rem)', letterSpacing: '-0.045em', lineHeight: 0.9 }}
@@ -319,8 +325,13 @@ export default function Hero({ started }: { started: boolean }) {
     )
   }
 
+  // Taller on phones, not shorter. A wheel notch is ~100px, but a thumb flick
+  // is 600-800px — against the old 300vh wrapper (a 1624px scroll range on an
+  // 812px screen) one flick moved the journey ~40%, so beats 02 and 03
+  // appeared and vanished inside a single swipe. 460vh gives each beat roughly
+  // a flick of its own.
   return (
-    <section ref={wrapRef} id="hero" className="relative h-[300vh] md:h-[340vh]">
+    <section ref={wrapRef} id="hero" className="relative h-[460vh] md:h-[340vh]">
       <div ref={stageRef} className="sticky top-0 h-[100svh] overflow-hidden">
 
         {/* eyebrow */}
@@ -331,7 +342,9 @@ export default function Hero({ started }: { started: boolean }) {
           animate={started ? { opacity: 1, y: 0 } : undefined}
           transition={{ delay: 0.25, duration: 0.7, ease: EASE }}
         >
-          {profile.discipline} · India → Sydney
+          {/* the route must never break across lines - "India →" stranded above
+              "Sydney" reads as two separate facts */}
+          {profile.discipline} · <span className="whitespace-nowrap">India → Sydney</span>
         </motion.p>
 
         {/* SUKHMANI - reveals dead-centre on load, then everything after is scroll */}

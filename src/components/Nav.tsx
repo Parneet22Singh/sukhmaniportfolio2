@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef, useCallback } from 'react'
 import { Link, useLocation } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
-import { campaignIndex, profile } from '../data/portfolio'
+import { campaignIndex, filmIndex, profile } from '../data/portfolio'
 
 const CHARS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ·-'
 
@@ -124,6 +124,24 @@ export default function Nav() {
                           <span className="opacity-50 group-hover:text-gold group-hover:opacity-100 transition-all">→</span>
                         </Link>
                       ))}
+
+                      {/* the film work lives on /media, but it belongs in the
+                          same list as far as a visitor is concerned */}
+                      <div className="my-2 border-t border-[var(--border)]" />
+                      {filmIndex.map((f) => (
+                        <Link
+                          key={f.to}
+                          to={f.to}
+                          onClick={() => setDrop(false)}
+                          className="group flex items-center justify-between px-4 py-3 rounded-lg hover:bg-gold/5 transition-colors"
+                        >
+                          <span>
+                            <span className="block text-sm group-hover:text-gold transition-colors">{f.title}</span>
+                            <span className="label !text-[9px]">{f.kicker}</span>
+                          </span>
+                          <span className="opacity-50 group-hover:text-gold group-hover:opacity-100 transition-all">→</span>
+                        </Link>
+                      ))}
                     </div>
                   </motion.div>
                 )}
@@ -201,6 +219,13 @@ export default function Nav() {
               {campaignIndex.map((c) => (
                 <Link key={c.slug} to={`/${c.slug}`} onClick={() => setOpen(false)} className="block opacity-65 py-1.5 text-lg">
                   {c.title}
+                </Link>
+              ))}
+
+              <p className="label-gold mb-3 mt-6">Film</p>
+              {filmIndex.map((f) => (
+                <Link key={f.to} to={f.to} onClick={() => setOpen(false)} className="block opacity-65 py-1.5 text-lg">
+                  {f.title}
                 </Link>
               ))}
               <a href={profile.linkedin} target="_blank" rel="noopener noreferrer" className="mt-5 inline-block label-gold border border-gold/40 rounded-full px-5 py-2.5">

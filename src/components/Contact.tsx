@@ -16,15 +16,6 @@ export default function Contact() {
       className="block-dark relative pt-[18vh] pb-12 px-6 md:px-12 overflow-hidden"
     >
       <div ref={ref} className="max-w-[1500px] mx-auto text-center">
-        <motion.p
-          className="label mb-8"
-          initial={{ opacity: 0 }}
-          animate={inView ? { opacity: 1 } : {}}
-          transition={{ duration: 0.7 }}
-        >
-          <Marked>{profile.statusBadge}</Marked>
-        </motion.p>
-
         <motion.h2
           className="font-display font-semibold text-ivory mx-auto"
           style={{ fontSize: 'clamp(2.6rem, 7.5vw, 8rem)', letterSpacing: '-0.04em', lineHeight: 0.95 }}

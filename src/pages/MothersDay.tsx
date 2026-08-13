@@ -16,6 +16,10 @@ const CARD_GRADIENTS = [
 ]
 
 const ROSE = '#FF6F91'
+
+// Spelled out so the heading reads as a sentence, and derived from the data so
+// it cannot drift if a post is added or a dead link is pulled.
+const WORDS = ['No', 'One', 'Two', 'Three', 'Four', 'Five', 'Six', 'Seven', 'Eight']
 const ease = [0.22, 1, 0.36, 1] as const
 
 function Reveal({ children, className = '', delay = 0 }: { children: React.ReactNode; className?: string; delay?: number }) {
@@ -70,16 +74,17 @@ export default function MothersDay() {
           <Reveal className="text-center mb-6">
             <p className="label" style={{ color: ROSE }}>Employee Advocacy · UGC</p>
           </Reveal>
-          <Reveal className="text-center mb-10" delay={0.1}>
+          <Reveal className="text-center mb-12" delay={0.1}>
             <h2 className="font-serif text-ivory" style={{ fontSize: 'clamp(2rem, 4.5vw, 4rem)', lineHeight: 1.1 }}>
-              Six voices. <em style={{ color: ROSE }}>One feeling.</em>
+              {WORDS[data.posts.length] ?? data.posts.length} voices.{' '}
+              <em style={{ color: ROSE }}>One feeling.</em>
             </h2>
             <p className="mt-5 text-fog max-w-[480px] mx-auto">
-              No media spend - just six colleagues telling their own mother's story, in their own words, on their own feeds.
+              No media spend - colleagues telling their own mother's story, in their own words, on their own feeds.
             </p>
           </Reveal>
 
-          {/* draggable UGC cards - gradient placeholders until post screenshots are added */}
+          {/* the fanned UGC cards - gradient placeholders until post screenshots are added */}
           <PhotoGallery
             photos={data.posts.map((p, i) => ({
               label: p.name,

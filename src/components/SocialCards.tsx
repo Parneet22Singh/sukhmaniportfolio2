@@ -56,7 +56,7 @@ function getSlotConfig(totalCards: number, slot: number) {
 const ARROW_CLASSES =
   "relative flex items-center justify-center rounded-full border-[1.5px] border-white/15 bg-white/5 backdrop-blur-[16px] text-white/55 cursor-pointer shrink-0 z-30 outline-none shadow-[0_4px_20px_rgba(0,0,0,0.35)] hover:border-white/40 hover:text-white active:opacity-70 transition-colors duration-300"
 
-export default function SocialCards({ cards }: { cards: CardItem[] }) {
+export default function SocialCards({ cards, onOpen }: { cards: CardItem[]; onOpen?: (index: number) => void }) {
   const containerRef = useRef<HTMLDivElement>(null)
   const isAnimating = useRef(false)
   const hasEntered = useRef(false)
@@ -253,6 +253,23 @@ export default function SocialCards({ cards }: { cards: CardItem[] }) {
                 <img src={card.imgUrl} loading="lazy" alt={card.alt || `Card ${index}`} className="absolute inset-0 w-full h-full object-cover z-10" />
               </div>
             )
+            // `onOpen` takes precedence over linkUrl: campaign galleries pass
+            // it so a card opens the in-page viewer rather than navigating the
+            // browser to a bare image file.
+            if (onOpen) {
+              return (
+                <button
+                  key={index}
+                  type="button"
+                  onClick={() => onOpen(index)}
+                  aria-label={card.alt || `Open image ${index + 1}`}
+                  data-cursor="hover"
+                  className="fan-card block cursor-pointer"
+                >
+                  {image}
+                </button>
+              )
+            }
             return card.linkUrl ? (
               <a key={index} href={card.linkUrl} target={card.linkUrl.startsWith('http') ? '_blank' : '_self'} rel="noopener noreferrer" className="fan-card block cursor-pointer">
                 {image}

@@ -6,30 +6,30 @@
 export const profile = {
   name: 'Sukhmani',
   title: 'Associate Vice President – Marketing',
-  company: 'Square Yards Australia',
+  company: 'Square Yards',
   discipline: 'Growth & Marketing Leadership',
   email: 'sukhmanibaghla@outlook.com',
-  // Two numbers, two markets — reachable on either side of the move.
-  phone: '+91 9910853014',
-  phones: [
-    { region: 'India', number: '+91 9910853014' },
-    { region: 'Australia', number: '+61 432 654 242' },
-  ],
+  phone: '+61 432 654 242',
+  phones: [{ region: 'Australia', number: '+61 432 654 242' }],
   linkedin: 'https://www.linkedin.com/in/sukhmani-baghla/',
   location: 'Gurugram, India',
   relocating: 'Relocating to Sydney, Australia · Aug 2026',
   tagline: 'I find what is holding the business back - and fix it.',
   positioning:
     'Nine years running growth for a business that scaled across India, the Middle East, Canada and Australia. Marketing is where I started; the constraint is what I actually solve for.',
-  statusBadge: 'Open to senior roles in Australia, from Aug 2026',
+  // The Australian market was part of the remit, run out of the India office.
+  // Worded as a market she has worked, not a company she was employed by.
+  marketNote: 'Including the Australian market, for Square Yards Australia',
   specialisms: ['Growth Strategy', 'Brand & Narrative', 'Demand Generation', 'Operating Structure'],
 }
 
+// `sub` renders on its own line beneath the label, so a stat can carry a
+// qualifier without the label growing into a paragraph.
 export const stats = [
   { value: '9+', label: 'Years leading growth' },
   { value: '4', label: 'Regions operated in' },
   { value: '3', label: 'Teams built and run' },
-  { value: 'MBA', label: 'Advanced · Sydney School of Business' },
+  { value: 'MBA', label: 'Advanced', sub: 'Sydney School of Business' },
 ]
 
 export const bio = {
@@ -172,7 +172,7 @@ export const caseStudies = [
     name: 'Find The Right Space For You',
     context: 'Square Yards · Delhi-NCR, Mumbai, Bengaluru · 2026',
     problem:
-      'Property advertising in India is interchangeable. Every competitor was buying the same channels to say the same thing, and awareness spend was not converting into consideration.',
+      'Property advertising is interchangeable. Every competitor was buying the same channels to say the same thing, and awareness spend was not converting into consideration.',
     diagnosis:
       'The category was competing on inventory and price - rational messages nobody remembers. Nobody had claimed the emotional problem the customer actually lives with: shrinking urban space.',
     intervention:
@@ -187,7 +187,7 @@ export const caseStudies = [
   {
     slug: 'ooh-campaign',
     name: 'OOH & DOOH Campaign',
-    context: 'Square Yards · India · 2021–2022',
+    context: 'Square Yards · 2021–2022',
     problem:
       'Low unaided recall in a hyper-competitive housing market where every brand was buying the same outdoor corridors.',
     diagnosis:
@@ -332,14 +332,46 @@ export const skills = [
   'C-Suite Advisory',
 ]
 
-// --- Media grid (personal reels) ---
+// --- Media grid (campaign film) ---
 export const mediaReels = [
   { type: 'youtube' as const, id: 'Tr-0REgn62k', title: 'Brand Campaign Showreel' },
   { type: 'youtube' as const, id: 'iSle_QKhovo', title: 'Campaign Highlights' },
   { type: 'youtube' as const, id: 'MPi2jnUAnuA', title: 'Marketing Series' },
-  { type: 'instagram' as const, url: 'https://www.instagram.com/reel/DO5a3ynEnl6/', title: 'Instagram - ORM' },
-  { type: 'instagram' as const, url: 'https://www.instagram.com/reel/DQyTj4QkpB3/', title: 'Instagram - Branding' },
-  { type: 'instagram' as const, url: 'https://www.instagram.com/reel/DTzmsPziCFH/', title: 'Instagram - Social' },
+  {
+    type: 'instagram' as const,
+    url: 'https://www.instagram.com/reel/DTzmsPziCFH/',
+    title: 'Subject Matter Expertise',
+  },
+]
+
+// --- Podcasts hosted ---
+// The two Instagram cuts and the two long-form episodes, kept together because
+// they are the same body of work in two different lengths.
+export const podcasts = [
+  {
+    type: 'youtube' as const,
+    id: 'Va1ddCqq_nA',
+    title: 'Can Real Estate Still Multiply Your Wealth?',
+    meta: 'Full episode · with Indrajit Sidhanta',
+  },
+  {
+    type: 'youtube' as const,
+    id: 'ofzZE589ulU',
+    title: "Buying a Flat? Don't Do It Before Watching This",
+    meta: 'Full episode · 2025 guide',
+  },
+  {
+    type: 'instagram' as const,
+    url: 'https://www.instagram.com/reel/DO5a3ynEnl6/',
+    title: 'Reputation Management',
+    meta: 'Instagram cut',
+  },
+  {
+    type: 'instagram' as const,
+    url: 'https://www.instagram.com/reel/DQyTj4QkpB3/',
+    title: 'Brand Building',
+    meta: 'Instagram cut',
+  },
 ]
 
 // --- Long-form video: TVCs and the branded series ---
@@ -347,6 +379,7 @@ export const mediaReels = [
 // the series queued behind the opening film, so nothing sends a visitor off-site.
 export const filmSeries = [
   {
+    id: 'tvcs',
     kicker: 'TVC',
     title: 'Television commercials',
     blurb: 'Brand films cut for television and digital, running as one playlist.',
@@ -355,13 +388,23 @@ export const filmSeries = [
     meta: 'Playlist',
   },
   {
+    id: 'meri-wali-home-story',
     kicker: 'Series',
     title: 'Meri Wali Home Story',
     blurb: 'A celebrity home-tour series, made when nobody could shoot on location.',
-    videoId: '',
+    // The playlist opens on videoseries, but a still is needed for the poster
+    // and a playlist has no thumbnail of its own — this is its first episode.
+    videoId: 'OtwvexpeESc',
     playlistId: 'PL_c4ir6KiGjcYh3xNNg_GXfpQGwR6UiGq',
     meta: 'Covid-era production',
   },
+]
+
+// Film work, surfaced in the nav alongside the campaigns. These are sections
+// of /media rather than routes of their own, hence the hash targets.
+export const filmIndex = [
+  { to: '/media#tvcs', title: 'TVCs', kicker: 'Television · Film' },
+  { to: '/media#meri-wali-home-story', title: 'Meri Wali Home Story', kicker: 'Series · Covid-era' },
 ]
 
 // --- Campaign index (used by nav dropdown + campaign cards) ---
@@ -415,11 +458,9 @@ export const oohCampaign = {
     'Bold, unconventional outdoor campaign using double-entendre humour and high-visibility placements to cut through a hyper-competitive housing market.',
   tags: ['Brand Awareness', 'OOH & DOOH', 'Integrated Campaign'],
   images: [
-    { url: '/img/campaigns/ooh/banner_design.jpg', caption: 'OOH Banner Design - Square Yards' },
     { url: '/img/campaigns/ooh/img.09.jpg', caption: 'Campaign Execution' },
     { url: '/img/campaigns/ooh/img.03.jpg', caption: 'Billboard Creative' },
     { url: '/img/campaigns/ooh/img.08.gif', caption: 'Dynamic DOOH Animation' },
-    { url: '/img/campaigns/ooh/img.10.jpg', caption: 'High-Traffic Placement' },
     { url: '/img/campaigns/ooh/traffic.01.jpg', caption: 'Threesome on your bucket list? - Double Meaning Humour' },
     { url: '/img/campaigns/ooh/traffic.02.jpg', caption: 'Theka kitni dur hai? - Traffic & Engagement' },
     { url: '/img/campaigns/ooh/traffic.03.jpg', caption: 'Size Does Matter - Inappropriate Humour' },
@@ -492,13 +533,12 @@ export const mothersDay = {
   theme: 'Gifting a first home to your mother',
   hashtags: ['#SquareYards', '#MothersDay', '#FirstHome'],
   description:
-    'A heartfelt social-first campaign celebrating the idea of gifting a first home to your mother - activating employee voices across LinkedIn and driving organic brand love for Square Yards through the #FirstHome narrative. The campaign activated 6 employee voices across LinkedIn, generating organic reach through authentic, personal posts.',
+    'A heartfelt social-first campaign celebrating the idea of gifting a first home to your mother - activating employee voices across LinkedIn and driving organic brand love for Square Yards through the #FirstHome narrative. The campaign activated employee voices across LinkedIn, generating organic reach through authentic, personal posts.',
   videoId: 'iSle_QKhovo',
   posts: [
     { name: 'Sonali Singh', handle: '@sonalisingh2274', url: 'https://www.linkedin.com/posts/sonalisingh2274_squareyards-mothersday-firsthome-ugcPost-7459175169996279809-O4cB' },
     { name: 'Kartik Rai', handle: '@kartik-raii', url: 'https://www.linkedin.com/posts/kartik-raii_squareyards-mothersday-firsthome-ugcPost-7459086750552989696-eueS' },
     { name: 'Unnati Mishra', handle: '@unnatimishra07', url: 'https://www.linkedin.com/posts/unnatimishra07_mothersday-squareyards-home-ugcPost-7459451845195902976-63zG' },
-    { name: 'Barsha Rani', handle: '@barsharani', url: 'https://www.linkedin.com/posts/barsharani_squareyards-mothersday-firsthome-ugcPost-7459492731829002240-smQq' },
     { name: 'Gagan Yadav', handle: '@gaganyadavs', url: 'https://www.linkedin.com/posts/gaganyadavs_squareyards-mothersday-firsthome-activity-7459507858905370624-d7R0' },
     { name: 'Pratishtha Agrawal', handle: '@pratishthaagrawal', url: 'https://www.linkedin.com/posts/pratishthaagrawal_campaigns-squareyards-mothersday-ugcPost-7459231162033520640-06SC' },
   ],
@@ -589,17 +629,5 @@ export const services = [
     title: 'Integrated Campaigns',
     desc: 'End-to-end campaigns spanning digital, OOH, influencer, and events - conceived, executed, and measured against real pipeline and growth targets.',
   },
-]
-
-// Selected-work highlights for the homepage masonry (real campaign visuals).
-export const selectedWork = [
-  { url: '/img/campaigns/ooh/banner_design.jpg', caption: 'OOH · Square Yards Billboard', slug: 'ooh-campaign' },
-  { url: '/img/campaigns/ooh/traffic.01.jpg', caption: 'OOH · Double-Meaning Humour', slug: 'ooh-campaign' },
-  { url: '/img/campaigns/ooh/img.03.jpg', caption: 'OOH · Billboard Creative', slug: 'ooh-campaign' },
-  { url: '/img/campaigns/ooh/traffic.03.jpg', caption: 'OOH · Size Does Matter', slug: 'ooh-campaign' },
-  { url: '/img/campaigns/ooh/img.10.jpg', caption: 'OOH · High-Traffic Placement', slug: 'ooh-campaign' },
-  { url: '/img/campaigns/ooh/social.media.jpg', caption: 'Social · Campaign Extension', slug: 'ooh-campaign' },
-  { url: '/img/campaigns/ooh/img.09.jpg', caption: 'OOH · Campaign Execution', slug: 'ooh-campaign' },
-  { url: '/img/campaigns/ooh/traffic.04.jpg', caption: 'OOH · Cheeky Copy', slug: 'ooh-campaign' },
 ]
 
