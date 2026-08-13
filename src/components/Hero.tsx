@@ -15,9 +15,13 @@ const NAME = 'SUKHMANI'.split('')
 // the whole sequence is under the reader's thumb.
 //
 //   p 0.00–0.14  SUKHMANI lifts from dead-centre into a masthead and shrinks
-//   p 0.03–0.32  the portrait fades up, holds, and clears the stage
-//   p 0.24–1.00  three beats carry the argument
-//   p 0.86–1.00  the melt rises — once the closing beat is typed and read
+//   p 0.03–0.22  the portrait fades up, holds, and clears the stage
+//   p 0.25–1.00  three beats carry the argument
+//   p 0.92–1.00  the melt rises — once the closing beat is typed and read
+//
+// The portrait used to hang on until 0.32 while beat 01 opened at 0.17, so the
+// first statement typed itself over a half-faded photograph. It is gone by
+// 0.22 now, and the stage sits empty for a beat before 01 arrives.
 //
 // The beats sit UNDER the melt (z-30 against the melt's z-60), so the lava
 // genuinely drowns the copy rather than flowing behind it. The original
@@ -58,24 +62,25 @@ function ramp(stops: number[], values: number[]) {
   }
 }
 
-// Windows are deliberately DISJOINT, with a small gap between each. They used
-// to abut (beat 02 ran to 0.71 while beat 03 opened at 0.70) and the beats are
-// absolutely positioned on top of one another, so for that overlap both were
-// painted at once and the two statements sat on top of each other. On desktop
-// the overlap was a few pixels of scroll and easy to miss; on a phone, where a
-// single flick covers a fifth of the journey, it landed square in the middle
-// of a swipe every time.
+// Windows are deliberately DISJOINT. They used to abut (beat 02 ran to 0.71
+// while beat 03 opened at 0.70) and the beats are absolutely positioned on top
+// of one another, so for that overlap both were painted at once and the two
+// statements sat on top of each other.
+//
+// The gaps between them are now 0.06 apiece — a held pause on an empty stage
+// between one statement and the next, rather than a handover. Beat 03 then
+// gets 0.18 to itself before the melt starts at 0.91.
 const BEATS: [number, number][] = [
-  [0.22, 0.46],
-  [0.48, 0.68],
-  [0.70, 1.0],
+  [0.25, 0.45],
+  [0.51, 0.71],
+  [0.77, 1.0],
 ]
 
 // The melt holds off until the closing beat has finished typing AND had a
 // beat to be read. It used to start at 0.78, while beat 03 was still typing —
 // the curtain drips were coming down through the line before anyone had got
 // to the end of it.
-const MELT_FROM = 0.86
+const MELT_FROM = 0.92
 
 const clamp01 = (v: number) => (v < 0 ? 0 : v > 1 ? 1 : v)
 const easeOut = (t: number) => 1 - Math.pow(1 - t, 3)
@@ -228,9 +233,38 @@ function Tick({ p, index }: { p: MotionValue<number>; index: number }) {
   )
 }
 
+// A quiet, permanent instruction for the length of the journey, sitting under
+// the beats. The word changes at the last beat: by then the reader has scrolled
+// three times and knows how it works — what they need is to be told the end is
+// coming, not told to scroll again.
+function ScrollHint({ p }: { p: MotionValue<number> }) {
+  const opacity = useTransform(p, ramp([0.12, 0.2, 0.86, 0.92], [0, 1, 1, 0]))
+  const [atEnd, setAtEnd] = useState(false)
+  useMotionValueEvent(p, 'change', (v) => setAtEnd(v > 0.77))
+
+  return (
+    <motion.div
+      style={{ opacity }}
+      className="absolute inset-x-0 bottom-[6%] z-40 flex flex-col items-center gap-3 pointer-events-none"
+      aria-hidden
+    >
+      <span className="label !text-[9px] !text-ink/45">{atEnd ? 'Almost there' : 'Keep scrolling'}</span>
+      {/* a bead running down a hairline, on a loop — the one thing on the
+          stage that moves without being scrolled, so it reads as an invitation */}
+      <span className="relative block w-px h-12 bg-ink/15 overflow-hidden">
+        <motion.span
+          className="absolute left-0 top-0 block w-px h-4 bg-gold"
+          animate={{ y: [-16, 48] }}
+          transition={{ duration: 1.8, repeat: Infinity, ease: 'easeInOut', repeatDelay: 0.3 }}
+        />
+      </span>
+    </motion.div>
+  )
+}
+
 function Rail({ p }: { p: MotionValue<number> }) {
   // out before the melt reaches it — the ticks disappear on orange anyway
-  const opacity = useTransform(p, ramp([0.18, 0.27, 0.86, 0.93], [0, 1, 1, 0]))
+  const opacity = useTransform(p, ramp([0.26, 0.33, 0.92, 0.97], [0, 1, 1, 0]))
   return (
     <motion.div
       style={{ opacity }}
@@ -288,9 +322,9 @@ export default function Hero({ started }: { started: boolean }) {
 
   // — the portrait: entirely scroll-triggered. Absent at rest, fades up as you
   //   begin, holds, then clears out before the beats take the stage —
-  const figOpacity = useTransform(p, ramp([0.03, 0.13, 0.22, 0.32], [0, 1, 1, 0]))
-  const figY = useTransform(p, ramp([0.03, 0.13], [70, 0]))
-  const figScale = useTransform(p, ramp([0.03, 0.13, 0.32], [0.95, 1, 0.88]))
+  const figOpacity = useTransform(p, ramp([0.03, 0.11, 0.17, 0.22], [0, 1, 1, 0]))
+  const figY = useTransform(p, ramp([0.03, 0.11], [70, 0]))
+  const figScale = useTransform(p, ramp([0.03, 0.11, 0.22], [0.95, 1, 0.88]))
 
   // — the melt: starts under the closing beat, not after it —
   // (the melt maps its own 0.72→1 window internally, from the raw scroll value)
@@ -331,7 +365,7 @@ export default function Hero({ started }: { started: boolean }) {
   // appeared and vanished inside a single swipe. 460vh gives each beat roughly
   // a flick of its own.
   return (
-    <section ref={wrapRef} id="hero" className="relative h-[460vh] md:h-[340vh]">
+    <section ref={wrapRef} id="hero" className="relative h-[560vh] md:h-[420vh]">
       <div ref={stageRef} className="sticky top-0 h-[100svh] overflow-hidden">
 
         {/* eyebrow */}
@@ -452,6 +486,14 @@ export default function Hero({ started }: { started: boolean }) {
             style={{ transformOrigin: 'top' }}
           />
         </motion.div>
+
+        {/* Persistent "keep scrolling" cue.
+            The opening cue above is tied to chromeOpacity and is gone by p 0.10,
+            which left the whole 0.10-0.92 journey with no indication that it is
+            driven by scroll at all — the stage just sits there between beats and
+            reads as a page that has finished loading. This one runs the length
+            of the journey and ducks out before the melt. */}
+        <ScrollHint p={p} />
 
         {/* --- the journey --- */}
         <Rail p={p} />

@@ -26,7 +26,7 @@ export default function Experience() {
           animate={inView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.8, delay: 0.1 }}
         >
-          Nine years, <span className="text-gold">three mandates.</span>
+          Three roles, <span className="text-gold">one throughline.</span>
         </motion.h2>
 
         {experience.map((xp, i) => {
@@ -68,7 +68,7 @@ export default function Experience() {
                   >
                     <div className="pb-10 md:pl-[4.5rem] max-w-4xl">
                       <div className="mb-8 border-l-2 border-gold/40 pl-5">
-                        <p className="label-gold !text-[9px] mb-2">The mandate</p>
+                        <p className="label-gold !text-[9px] mb-2">What I owned</p>
                         <p className="text-ink/80 leading-relaxed" style={{ fontSize: 'clamp(1rem, 1.4vw, 1.15rem)' }}>
                           {xp.mandate}
                         </p>

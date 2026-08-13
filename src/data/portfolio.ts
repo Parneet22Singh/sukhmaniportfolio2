@@ -29,14 +29,14 @@ export const stats = [
   { value: '9+', label: 'Years leading growth' },
   { value: '4', label: 'Regions operated in' },
   { value: '3', label: 'Teams built and run' },
-  { value: 'MBA', label: 'Advanced', sub: 'Sydney School of Business' },
+  { value: 'MBA', label: 'Advanced', sub: 'Sydney School of Business, UoW' },
 ]
 
 export const bio = {
   paragraphs: [
-    'I spent nine years inside a business that grew across India, the Middle East, Canada and Australia - not advising from the outside, but owning the number, the budget and the teams. That means I have made the calls, lived with the consequences, and learned where growth actually breaks.',
+    'Nine years inside one business as it scaled meant making the calls rather than recommending them, and staying long enough to live with the consequences. That is where you learn how growth actually breaks.',
     'It rarely breaks where people think. The brief says "we need better campaigns." The real problem is usually a positioning nobody agrees on, a funnel that leaks after the click, or a sales and marketing pair working from two different definitions of a good lead.',
-    'I am completing an MBA (Advanced) at the Sydney School of Business, UOW, and moving to Australia in 2026 to do this work for businesses there.',
+    'I have just begun an MBA (Advanced) at the Sydney School of Business, UoW, and I am moving to Australia to do this work for businesses there.',
   ],
   pullQuote:
     'Most businesses do not have a marketing problem. They have a problem that marketing was asked to hide.',
@@ -240,10 +240,10 @@ export const caseStudies = [
 export const education = [
   {
     degree: 'MBA Advanced',
-    institution: 'Sydney School of Business, UOW',
+    institution: 'Sydney School of Business, UoW',
     location: 'Sydney, Australia',
     period: 'August 2026 – Present',
-    note: 'Starting Aug 2026 · Student Visa (Subclass 500)',
+    note: 'Student Visa (Subclass 500)',
     highlighted: true,
   },
   {
@@ -407,7 +407,9 @@ export const filmIndex = [
   { to: '/media#meri-wali-home-story', title: 'Meri Wali Home Story', kicker: 'Series · Covid-era' },
 ]
 
-// --- Campaign index (used by nav dropdown + campaign cards) ---
+// --- Campaign index (used by /campaigns and the homepage cards) ---
+// `cover` is the still each campaign is represented by: a frame from its own
+// billboard set, or the poster of its film.
 // `accent` is a hex color that themes each campaign's bespoke page.
 export const campaignIndex = [
   {
@@ -417,6 +419,7 @@ export const campaignIndex = [
     blurb: 'Bold, unconventional outdoor campaign that cut through a hyper-competitive housing market.',
     period: '2021–2022',
     accent: '#F5C518', // billboard amber
+    cover: '/img/campaigns/ooh/traffic.01.jpg'
   },
   {
     slug: 'parking-ticket',
@@ -425,6 +428,7 @@ export const campaignIndex = [
     blurb: 'Branded mock parking tickets turned everyday frustration into a citywide conversation.',
     period: 'May 2026',
     accent: '#FF7A1A', // citation orange
+    cover: 'https://i.ytimg.com/vi/q2s19vlX0UA/hqdefault.jpg'
   },
   {
     slug: 'mothers-day',
@@ -433,6 +437,7 @@ export const campaignIndex = [
     blurb: 'A heartfelt campaign about gifting a first home to your mother, powered by employee voices.',
     period: 'Social',
     accent: '#FF6F91', // warm rose
+    cover: 'https://i.ytimg.com/vi/iSle_QKhovo/hqdefault.jpg'
   },
   {
     slug: 'raasta-royal',
@@ -441,6 +446,7 @@ export const campaignIndex = [
     blurb: 'Making the road to owning a home feel as grand as the destination itself.',
     period: 'Film',
     accent: '#E7C873', // royal gold
+    cover: 'https://i.ytimg.com/vi/MPi2jnUAnuA/hqdefault.jpg'
   },
 ]
 

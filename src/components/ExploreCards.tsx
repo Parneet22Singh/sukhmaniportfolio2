@@ -20,7 +20,7 @@ const ROUTES = [
     blurb: 'Diagnose, prioritise, build, hand over. Four movements, and the first one is not optional.',
   },
   {
-    to: '/ooh-campaign',
+    to: '/campaigns',
     n: '03',
     kicker: 'The Proof',
     title: 'Campaigns',
@@ -69,7 +69,7 @@ export default function ExploreCards() {
                 className="group card-invert block bg-bone text-ink p-8 md:p-10 h-full transition-colors duration-300 hover:bg-ink hover:text-bone"
               >
                 <div className="flex items-baseline justify-between gap-4">
-                  <span className="label-gold !text-[9px]">{r.kicker}</span>
+                  <span className="label-gold !text-[12px]">{r.kicker}</span>
                   <span className="font-display text-sm tabular-nums opacity-40">{r.n}</span>
                 </div>
                 <h3
@@ -110,7 +110,7 @@ export default function ExploreCards() {
 
             <div className="pl-6 md:pl-8">
               <div className="flex items-baseline justify-between gap-4">
-                <span className="label-gold !text-[9px]">The Reel</span>
+                <span className="label-gold !text-[12px]">The Reel</span>
                 <span className="font-display text-sm tabular-nums opacity-40">05</span>
               </div>
 

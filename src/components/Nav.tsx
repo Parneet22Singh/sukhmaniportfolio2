@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef, useCallback } from 'react'
 import { Link, useLocation } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
-import { campaignIndex, filmIndex, profile } from '../data/portfolio'
+import { profile } from '../data/portfolio'
 
 const CHARS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ·-'
 
@@ -40,7 +40,11 @@ function Scramble({ text }: { text: string }) {
 }
 
 // Routes, not anchors — the site is a set of pages now, not one long scroll.
+// Campaigns is a route too: it used to be a hover dropdown, which could not be
+// linked to, could not be scrolled, and needed a tap on touch just to reveal
+// what was inside it.
 const NAV = [
+  { label: 'CAMPAIGNS', to: '/campaigns' },
   { label: 'CAPABILITIES', to: '/capabilities' },
   { label: 'APPROACH', to: '/approach' },
   { label: 'MEDIA', to: '/media' },
@@ -49,15 +53,8 @@ const NAV = [
 
 export default function Nav() {
   const [open, setOpen] = useState(false)
-  const [drop, setDrop] = useState(false)
   const [scrolled, setScrolled] = useState(false)
   const { pathname } = useLocation()
-
-  // Dropdown open/close with a small close delay so moving the cursor
-  // from the trigger to the menu never snaps it shut.
-  const dropTimer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined)
-  const openDrop = () => { if (dropTimer.current) clearTimeout(dropTimer.current); setDrop(true) }
-  const closeDrop = () => { dropTimer.current = setTimeout(() => setDrop(false), 160) }
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 40)
@@ -68,7 +65,6 @@ export default function Nav() {
   // Contact is the footer of every page, so this never needs to change route.
   const goToContact = () => {
     setOpen(false)
-    setDrop(false)
     document.querySelector('#contact')?.scrollIntoView({ behavior: 'smooth' })
   }
 
@@ -93,60 +89,6 @@ export default function Nav() {
               breakpoint here rendered BOTH the full menu and the burger at
               every width from 768 to 1023. */}
           <div className="hidden lg:flex items-center gap-8">
-            {/* Campaigns dropdown */}
-            <div className="relative" onMouseEnter={openDrop} onMouseLeave={closeDrop}>
-              <button onClick={() => setDrop((v) => !v)} className="label u-link opacity-60 hover:opacity-100 transition-colors">
-                <Scramble text="CAMPAIGNS" /> <span className="text-gold">↓</span>
-              </button>
-              <AnimatePresence>
-                {drop && (
-                  <motion.div
-                    initial={{ opacity: 0, y: 10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: 6 }}
-                    transition={{ duration: 0.25 }}
-                    /* pt-4 is a hover *bridge*: it belongs to this element (a
-                       child of the wrapper), so crossing it never fires mouseleave */
-                    className="absolute top-full right-0 pt-4 w-72"
-                  >
-                    <div className="liquid-glass-strong border border-[var(--border)] rounded-xl p-2 shadow-soft">
-                      {campaignIndex.map((c) => (
-                        <Link
-                          key={c.slug}
-                          to={`/${c.slug}`}
-                          onClick={() => setDrop(false)}
-                          className="group flex items-center justify-between px-4 py-3 rounded-lg hover:bg-gold/5 transition-colors"
-                        >
-                          <span>
-                            <span className="block text-sm group-hover:text-gold transition-colors">{c.title}</span>
-                            <span className="label !text-[9px]">{c.kicker}</span>
-                          </span>
-                          <span className="opacity-50 group-hover:text-gold group-hover:opacity-100 transition-all">→</span>
-                        </Link>
-                      ))}
-
-                      {/* the film work lives on /media, but it belongs in the
-                          same list as far as a visitor is concerned */}
-                      <div className="my-2 border-t border-[var(--border)]" />
-                      {filmIndex.map((f) => (
-                        <Link
-                          key={f.to}
-                          to={f.to}
-                          onClick={() => setDrop(false)}
-                          className="group flex items-center justify-between px-4 py-3 rounded-lg hover:bg-gold/5 transition-colors"
-                        >
-                          <span>
-                            <span className="block text-sm group-hover:text-gold transition-colors">{f.title}</span>
-                            <span className="label !text-[9px]">{f.kicker}</span>
-                          </span>
-                          <span className="opacity-50 group-hover:text-gold group-hover:opacity-100 transition-all">→</span>
-                        </Link>
-                      ))}
-                    </div>
-                  </motion.div>
-                )}
-              </AnimatePresence>
-            </div>
             {NAV.map((a) => (
               <Link
                 key={a.to}
@@ -214,21 +156,11 @@ export default function Nav() {
             >
               Let's talk
             </motion.button>
-            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.4 }} className="mt-6 border-t border-[var(--border)] pt-6">
-              <p className="label-gold mb-3">Campaigns</p>
-              {campaignIndex.map((c) => (
-                <Link key={c.slug} to={`/${c.slug}`} onClick={() => setOpen(false)} className="block opacity-65 py-1.5 text-lg">
-                  {c.title}
-                </Link>
-              ))}
-
-              <p className="label-gold mb-3 mt-6">Film</p>
-              {filmIndex.map((f) => (
-                <Link key={f.to} to={f.to} onClick={() => setOpen(false)} className="block opacity-65 py-1.5 text-lg">
-                  {f.title}
-                </Link>
-              ))}
-              <a href={profile.linkedin} target="_blank" rel="noopener noreferrer" className="mt-5 inline-block label-gold border border-gold/40 rounded-full px-5 py-2.5">
+            {/* The campaign and film lists used to be repeated here in full.
+                They live on /campaigns now, which is in NAV above, so this is
+                just the outbound link. */}
+            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.4 }} className="mt-8 border-t border-[var(--border)] pt-6">
+              <a href={profile.linkedin} target="_blank" rel="noopener noreferrer" className="inline-block label-gold border border-gold/40 rounded-full px-5 py-2.5">
                 LINKEDIN ↗
               </a>
             </motion.div>

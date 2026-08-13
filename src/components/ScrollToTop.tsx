@@ -8,6 +8,18 @@ import { useLocation } from 'react-router-dom'
 export default function ScrollToTop() {
   const { pathname, hash } = useLocation()
 
+  // Browsers restore the previous scroll offset on reload. That is normally
+  // helpful, but this homepage opens on a 420vh pinned journey — reloading
+  // three screens in dropped the visitor into the middle of it with the name
+  // already shrunk and a beat half typed, looking broken. Opt out once, on
+  // mount, before any paint.
+  useEffect(() => {
+    if ('scrollRestoration' in window.history) {
+      window.history.scrollRestoration = 'manual'
+    }
+    if (!window.location.hash) window.scrollTo(0, 0)
+  }, [])
+
   useEffect(() => {
     if (!hash) {
       window.scrollTo({ top: 0, behavior: 'instant' as ScrollBehavior })

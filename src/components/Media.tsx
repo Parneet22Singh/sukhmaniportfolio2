@@ -42,9 +42,15 @@ function MorphCanvas({ progress, cardRefs }: { progress: MotionValue<number>; ca
     const ctx = canvas.getContext('2d')
     if (!ctx) return
 
+    // `card` is an index into the destination frames, so it must be modulo the
+    // ACTUAL number of them. It was hard-coded to 6, which was right until two
+    // of the reels moved out to the podcasts section and left four — after
+    // which every particle assigned to card 4 or 5 looked up an undefined rect,
+    // `perimeter` threw on `rect.w`, and the whole render died mid-morph.
+    const cardCount = Math.max(mediaReels.length, 1)
     const parts: P[] = Array.from({ length: N }, (_, i) => {
       const [bx, by] = sampleBrain()
-      return { bx, by, t: Math.random(), stagger: Math.random() * 0.3, card: i % 6 }
+      return { bx, by, t: Math.random(), stagger: Math.random() * 0.3, card: i % cardCount }
     })
     // constellation pairs (near neighbours in brain space)
     const pairs: [number, number][] = []
@@ -60,18 +66,26 @@ function MorphCanvas({ progress, cardRefs }: { progress: MotionValue<number>; ca
     // repaint every frame, for dots 1.4px across that nobody can see the edges
     // of anyway.
     const dpr = Math.min(window.devicePixelRatio || 1, 1.5)
+
+    // Deliberately does NOT write canvas.style.width/height. Inline pixel sizes
+    // beat the element's `w-full h-full`, so one bad measurement — and this
+    // section sits at the bottom of a page whose height is still settling on
+    // first paint — pinned the canvas at the wrong size, or at zero, with no
+    // way back. Presentation stays with the CSS; only the backing store is set
+    // here, and a ResizeObserver keeps it in step with the real box rather
+    // than waiting for a window resize that never comes.
     const resize = () => {
-      const r = canvas.parentElement!.getBoundingClientRect()
+      const r = canvas.getBoundingClientRect()
+      if (!r.width || !r.height) return
       W = r.width
       H = r.height
       canvas.width = Math.round(W * dpr)
       canvas.height = Math.round(H * dpr)
-      canvas.style.width = `${W}px`
-      canvas.style.height = `${H}px`
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0)
     }
     resize()
-    window.addEventListener('resize', resize)
+    const ro = new ResizeObserver(resize)
+    ro.observe(canvas)
 
     // point on a card's perimeter at parameter t ∈ [0,1)
     const perimeter = (rect: { x: number; y: number; w: number; h: number }, t: number): [number, number] => {
@@ -86,9 +100,11 @@ function MorphCanvas({ progress, cardRefs }: { progress: MotionValue<number>; ca
       return [rect.x, rect.y + rect.h - d]
     }
 
-    // only animate while the section is on screen
+    // Only animate while the section is on screen. The margin keeps the loop
+    // alive slightly beyond the edges, so a fast scroll back into the section
+    // finds it already running instead of resuming from a stale frame.
     let visible = true
-    const io = new IntersectionObserver(([e]) => { visible = e.isIntersecting })
+    const io = new IntersectionObserver(([e]) => { visible = e.isIntersecting }, { rootMargin: '200px' })
     io.observe(canvas)
 
     let raf = 0
@@ -96,24 +112,25 @@ function MorphCanvas({ progress, cardRefs }: { progress: MotionValue<number>; ca
     let pSmooth = 0
     let rects: { x: number; y: number; w: number; h: number }[] = []
 
-    const loop = () => {
-      if (!visible) { raf = requestAnimationFrame(loop); return }
-      frame++
-      // re-measure card rects every 12 frames (cheap, tracks layout)
-      if (frame % 12 === 1 && cardRefs.current) {
-        const base = canvas.getBoundingClientRect()
-        rects = cardRefs.current.map((el) => {
-          if (!el) return { x: W / 2, y: H / 2, w: 0, h: 0 }
-          const r = el.getBoundingClientRect()
-          return { x: r.left - base.left, y: r.top - base.top, w: r.width, h: r.height }
-        })
-      }
+    // Measuring the six destination rects. Pulled out of the loop so a single
+    // frame can be rendered on demand for testing.
+    const measure = () => {
+      if (!cardRefs.current) return
+      const base = canvas.getBoundingClientRect()
+      rects = cardRefs.current.map((el) => {
+        if (!el) return { x: W / 2, y: H / 2, w: 0, h: 0 }
+        const r = el.getBoundingClientRect()
+        return { x: r.left - base.left, y: r.top - base.top, w: r.width, h: r.height }
+      })
+    }
 
-      // Smooth the scroll value so fast wheels can't snap the morph,
-      // then hold the mind fully formed for the first 28% of the pin
-      // before it begins to disperse.
-      pSmooth += (progress.get() - pSmooth) * 0.07
-      const p = Math.min(Math.max((pSmooth - 0.28) / 0.62, 0), 1)
+    // One frame at an explicit morph position. The rAF loop below supplies a
+    // smoothed scroll value; nothing else about the drawing differs.
+    const renderFrame = (p: number) => {
+      if (!W || !H) {
+        resize()
+        if (!W || !H) return
+      }
       ctx.clearRect(0, 0, W, H)
 
       const cx = W / 2, cy = H * 0.54
@@ -126,8 +143,13 @@ function MorphCanvas({ progress, cardRefs }: { progress: MotionValue<number>; ca
         const bx = cx + pt.bx * s + wob
         const by = cy + pt.by * s * 0.92 + Math.cos(time * 0.6 + i * 1.7) * 2.5
         const lp = easeInOut(Math.min(Math.max((p - pt.stagger) / 0.7, 0), 1))
-        if (lp === 0 || !rects.length) return [bx, by]
-        const [tx, ty] = perimeter(rects[pt.card], pt.t)
+        // A missing or unmeasured rect must leave the particle where it is, not
+        // throw. One exception inside this map kills the frame, and because the
+        // loop only reschedules after a clean pass, it killed every frame after
+        // it too — the morph "worked until you scrolled, then never came back".
+        const rect = rects[pt.card]
+        if (lp === 0 || !rect || !rect.w) return [bx, by]
+        const [tx, ty] = perimeter(rect, pt.t)
         return [bx + (tx - bx) * lp, by + (ty - by) * lp]
       })
 
@@ -155,14 +177,41 @@ function MorphCanvas({ progress, cardRefs }: { progress: MotionValue<number>; ca
         ctx.arc(pos[i][0], pos[i][1], r, 0, Math.PI * 2)
         ctx.fill()
       }
+    }
 
+    const loop = () => {
       raf = requestAnimationFrame(loop)
+      if (!visible) return
+      frame++
+      // re-measure card rects every 12 frames (cheap, tracks layout)
+      if (frame % 12 === 1) measure()
+
+      // Smooth the scroll value so fast wheels can't snap the morph,
+      // then hold the mind fully formed for the first 28% of the pin
+      // before it begins to disperse.
+      pSmooth += (progress.get() - pSmooth) * 0.07
+      renderFrame(Math.min(Math.max((pSmooth - 0.28) / 0.62, 0), 1))
     }
     raf = requestAnimationFrame(loop)
+
+    // Dev-only handle so the morph can be driven and inspected without relying
+    // on requestAnimationFrame, which is suspended whenever the page is not
+    // compositing (a background tab, or a hidden preview pane).
+    if (import.meta.env.DEV) {
+      ;(window as unknown as Record<string, unknown>).__brain = {
+        renderFrame,
+        measure,
+        size: () => [W, H],
+        rects: () => rects,
+        progress: () => progress.get(),
+      }
+    }
+
     return () => {
       cancelAnimationFrame(raf)
       io.disconnect()
-      window.removeEventListener('resize', resize)
+      ro.disconnect()
+      if (import.meta.env.DEV) delete (window as unknown as Record<string, unknown>).__brain
     }
   }, [progress, cardRefs])
 
@@ -217,22 +266,26 @@ export default function Media() {
   const headOpacity = useTransform(scrollYProgress, [0, 0.06, 0.32, 0.46], [0, 1, 1, 0])
   const gridLabelOpacity = useTransform(scrollYProgress, [0.6, 0.75], [0, 1])
 
-  // The morph is desktop-and-tablet only. On a phone the sticky stage has to
-  // fit six cards into 100svh, which forced a 2-up grid of 150px-wide tiles —
-  // a YouTube facade at that size is unreadable and unclickable. Phones also
-  // pay the worst price for 420 particles plus 700 line segments a frame.
-  // Below 768px the section becomes an ordinary stacked grid instead.
+  // The morph falls back to a plain grid on real phones: the sticky stage has
+  // to fit six cards into 100svh, which at phone width forced a 2-up grid of
+  // 150px tiles that could be neither read nor tapped.
+  //
+  // The cutoff is 640px, NOT 768px. At 768 the fallback was swallowing tablets
+  // and any half-width desktop window, so the constellation simply never
+  // appeared and looked broken. From 640 up the grid is 2- or 3-across and the
+  // cards are big enough for the morph to be worth having.
   const [still, setStill] = useState(false)
   useEffect(() => {
     const reduce = window.matchMedia('(prefers-reduced-motion: reduce)')
-    const narrow = window.matchMedia('(max-width: 767px)')
-    const sync = () => setStill(reduce.matches || narrow.matches)
+    const sync = () => setStill(reduce.matches || window.innerWidth < 640)
     sync()
     reduce.addEventListener('change', sync)
-    narrow.addEventListener('change', sync)
+    // a plain resize listener as well: matchMedia change does not fire for
+    // every kind of viewport change, and a window dragged wider must recover
+    window.addEventListener('resize', sync)
     return () => {
       reduce.removeEventListener('change', sync)
-      narrow.removeEventListener('change', sync)
+      window.removeEventListener('resize', sync)
     }
   }, [])
 

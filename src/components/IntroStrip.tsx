@@ -60,15 +60,17 @@ export default function IntroStrip() {
           >
             {/* hairline grid rather than floating cards - flat surfaces need
                 edges, not shadows */}
-            {/* value, then label, then an optional third line - so MBA reads
-                as MBA / Advanced / Sydney School of Business down the card
-                rather than as one run-on caption */}
+            {/* Value and label share a baseline, so the qualifier reads as part
+                of the figure - "MBA Advanced" - and the third line drops
+                underneath it rather than the three stacking into a list. */}
             {stats.map((s) => (
               <div key={s.label} className="bg-bone px-5 py-6">
-                <p className="font-display font-bold text-2xl md:text-3xl leading-none">{s.value}</p>
-                <p className="label mt-3 !text-[8px] leading-tight">{s.label}</p>
+                <p className="flex items-baseline gap-2 flex-wrap">
+                  <span className="font-display font-bold text-2xl md:text-3xl leading-none">{s.value}</span>
+                  <span className="label !text-[8px] leading-tight">{s.label}</span>
+                </p>
                 {'sub' in s && s.sub && (
-                  <p className="label mt-1 !text-[8px] leading-tight opacity-70">{s.sub}</p>
+                  <p className="label mt-2 !text-[8px] leading-tight opacity-70">{s.sub}</p>
                 )}
               </div>
             ))}

@@ -195,13 +195,13 @@ export default function MediaPage() {
         <Marquee />
       </motion.div>
 
-      {/* the constellation comes apart into the work */}
-      <Media />
+      <Podcasts />
 
       {/* long-form film */}
       <FilmSeries />
 
-      <Podcasts />
+      {/* the constellation comes apart into the work */}
+      <Media />
 
       <Contact />
     </div>

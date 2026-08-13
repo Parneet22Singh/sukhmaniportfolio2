@@ -18,12 +18,23 @@ function Reveal({ children, className = '', delay = 0 }: { children: React.React
   )
 }
 
-// 35mm sprocket strip
-function Sprockets() {
+// 35mm sprocket strip.
+//
+// This was black film stock with near-black perforations, sitting on a black
+// page — three blacks inside 10% of each other, so the frame that is supposed
+// to make the video read as a strip of film was completely invisible. The
+// stock is now a warm grey and the perforations are the page ground, which is
+// the right way round anyway: a perforation is a hole you see through.
+function Sprockets({ edge }: { edge: 'top' | 'bottom' }) {
   return (
-    <div className="flex justify-between px-2 py-2 bg-black" aria-hidden>
+    <div
+      className={`flex justify-between px-2 py-2.5 bg-[#2B2620] ${
+        edge === 'top' ? 'border-b' : 'border-t'
+      } border-[#E7C873]/20`}
+      aria-hidden
+    >
       {Array.from({ length: 16 }).map((_, i) => (
-        <span key={i} className="w-3.5 h-2.5 rounded-[3px] bg-warmdark" />
+        <span key={i} className="w-3.5 h-2.5 rounded-[3px] bg-[#0B0A09]" />
       ))}
     </div>
   )
@@ -64,10 +75,12 @@ export default function RaastaRoyal() {
         <div className="max-w-[1050px] mx-auto">
           <Reveal>
             <p className="label text-center mb-8 tracking-[0.3em]" style={{ color: GOLD_INK }}>◆ Now Screening ◆</p>
-            <div className="rounded-xl overflow-hidden shadow-soft border border-ivory/10 bg-black">
-              <Sprockets />
+            {/* gold hairline rather than ivory/10: on this page the frame is
+                the point, and a 10% white edge on black does not read */}
+            <div className="rounded-xl overflow-hidden border border-[#E7C873]/25 bg-[#2B2620]">
+              <Sprockets edge="top" />
               <YouTube id={data.videoId} start={data.videoStart} title="Raasta bhi Royal - brand film" className="!rounded-none" />
-              <Sprockets />
+              <Sprockets edge="bottom" />
             </div>
           </Reveal>
         </div>
@@ -95,30 +108,11 @@ export default function RaastaRoyal() {
         </div>
       </section>
 
-      {/* ----- COMING ATTRACTIONS: reel slots ----- */}
+      {/* The "Coming Attractions" grid lived here: three dashed placeholders
+          reading "Reel drops soon" for cuts that do not exist. An empty promise
+          on a proof page costs more than the space it fills. */}
       <section className="relative py-[10vh] px-6 md:px-12">
         <div className="max-w-[1100px] mx-auto">
-          <Reveal className="text-center mb-14">
-            <p className="label" style={{ color: GOLD_INK }}>Coming Attractions</p>
-          </Reveal>
-          <div className="grid md:grid-cols-3 gap-6">
-            {data.reelSlots.map((slot, i) => (
-              <Reveal key={slot} delay={i * 0.1}>
-                <div className="group relative aspect-video rounded-xl border border-dashed border-ivory/20 flex flex-col items-center justify-center gap-4 transition-colors duration-500 hover:border-[#E7C873]/60">
-                  {/* film canister */}
-                  <div className="relative w-16 h-16 rounded-full border-2 flex items-center justify-center animate-spin-slow" style={{ borderColor: `${GOLD}55` }} aria-hidden>
-                    <div className="w-5 h-5 rounded-full border-2" style={{ borderColor: `${GOLD}88` }} />
-                    {[0, 60, 120, 180, 240, 300].map((deg) => (
-                      <span key={deg} className="absolute w-2 h-2 rounded-full" style={{ background: `${GOLD}44`, transform: `rotate(${deg}deg) translateY(-21px)` }} />
-                    ))}
-                  </div>
-                  <p className="font-display text-ivory/80 group-hover:text-ivory transition-colors">{slot}</p>
-                  <p className="label !text-[9px]">Reel drops soon</p>
-                </div>
-              </Reveal>
-            ))}
-          </div>
-
           {/* press */}
           {data.press.length > 0 && (
             <Reveal className="mt-16">

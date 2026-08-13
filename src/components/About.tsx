@@ -72,8 +72,8 @@ export default function About() {
           </Reveal>
           <Reveal delay={0.4}>
             <p className="mt-8 max-w-[420px] text-ink/65 leading-relaxed">
-              Nine years running growth across India, the Middle East, Canada and Australia taught me that the brief is rarely the
-              problem. I work back from the number to find where it actually breaks - then fix that, and build the
+              Running growth from the inside teaches you that the brief is rarely the problem. I work back
+              from the number to find the stage that is actually failing, fix that, and then build the
               campaign the business needed in the first place.
             </p>
           </Reveal>
