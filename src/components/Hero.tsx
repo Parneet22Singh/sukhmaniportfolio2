@@ -15,13 +15,12 @@ const NAME = 'SUKHMANI'.split('')
 // the whole sequence is under the reader's thumb.
 //
 //   p 0.00–0.14  SUKHMANI lifts from dead-centre into a masthead and shrinks
-//   p 0.03–0.22  the portrait fades up, holds, and clears the stage
-//   p 0.25–1.00  three beats carry the argument
-//   p 0.92–1.00  the melt rises — once the closing beat is typed and read
+//   p 0.02–0.16  the portrait fades up, holds, and clears the stage
+//   p 0.18–1.00  three wide beats carry the argument, each held still to read
+//   p 0.90–1.00  the melt rises — once the closing beat is typed and read
 //
-// The portrait used to hang on until 0.32 while beat 01 opened at 0.17, so the
-// first statement typed itself over a half-faded photograph. It is gone by
-// 0.22 now, and the stage sits empty for a beat before 01 arrives.
+// The portrait clears by 0.16, before beat 01 opens at 0.18, so the first
+// statement never types itself over a half-faded photograph.
 //
 // The beats sit UNDER the melt (z-30 against the melt's z-60), so the lava
 // genuinely drowns the copy rather than flowing behind it. The original
@@ -62,25 +61,22 @@ function ramp(stops: number[], values: number[]) {
   }
 }
 
-// Windows are deliberately DISJOINT. They used to abut (beat 02 ran to 0.71
-// while beat 03 opened at 0.70) and the beats are absolutely positioned on top
-// of one another, so for that overlap both were painted at once and the two
-// statements sat on top of each other.
-//
-// The gaps between them are now 0.06 apiece — a held pause on an empty stage
-// between one statement and the next, rather than a handover. Beat 03 then
-// gets 0.18 to itself before the melt starts at 0.91.
+// Windows are deliberately DISJOINT, with a clear gap between each — the beats
+// are absolutely positioned on top of one another, so any overlap paints two
+// statements at once. Each window is WIDE (0.22 of the journey) and the writing
+// inside it is front-loaded, so most of the window is the finished statement
+// simply standing still to be read (see the choreography in Beat).
 const BEATS: [number, number][] = [
-  [0.25, 0.45],
-  [0.51, 0.71],
-  [0.77, 1.0],
+  [0.18, 0.40],
+  [0.47, 0.69],
+  [0.76, 1.0],
 ]
 
-// The melt holds off until the closing beat has finished typing AND had a
-// beat to be read. It used to start at 0.78, while beat 03 was still typing —
-// the curtain drips were coming down through the line before anyone had got
-// to the end of it.
-const MELT_FROM = 0.92
+// The melt holds off until the closing beat is fully typed AND has had a long,
+// still stretch to be read. Beat 03 finishes writing at ~0.84; the melt not
+// starting until 0.90 leaves a clear reading gap with the whole statement up
+// and no lava anywhere on the stage.
+const MELT_FROM = 0.90
 
 const clamp01 = (v: number) => (v < 0 ? 0 : v > 1 ? 1 : v)
 const easeOut = (t: number) => 1 - Math.pow(1 - t, 3)
@@ -141,20 +137,20 @@ function Beat({
 }) {
   const [from, to] = BEATS[index]
 
-  // Choreography, as fractions of the beat's own window: the rule draws, the
-  // prompt line arrives, then the statement types. The erase is quicker than
-  // the type, the way a real backspace is.
+  // Front-load everything that moves, then HOLD. The rule, the prompt, the
+  // typing and the sub are all done inside the first third of the window; the
+  // whole middle stretch is the finished statement standing completely still,
+  // to be read. Only near the very end does it erase and hand over. Previously
+  // the writing ran to 44% and the erase began at 85%, so the genuinely
+  // still, readable stretch was a sliver.
   const span = to - from
-  const ruleIn: [number, number] = [from, from + span * 0.09]
-  const kickIn: [number, number] = [from + span * 0.04, from + span * 0.16]
-  // Typing finishes by 40% of the beat, the sub by 44%. On beat 03 that puts
-  // the line complete at p≈0.82 against a melt that now starts at 0.86 — a
-  // clear stretch with the whole statement up and no lava on screen.
-  const typeIn: [number, number] = [from + span * 0.14, from + span * 0.4]
-  const subIn: [number, number] = [from + span * 0.33, from + span * 0.44]
-  const eraseFrom = to - span * 0.15
-  const eraseTo = to - span * 0.05
-  const fadeOut: [number, number] = [to - span * 0.06, to - span * 0.01]
+  const ruleIn: [number, number] = [from, from + span * 0.05]
+  const kickIn: [number, number] = [from + span * 0.03, from + span * 0.1]
+  const typeIn: [number, number] = [from + span * 0.08, from + span * 0.26]
+  const subIn: [number, number] = [from + span * 0.24, from + span * 0.32]
+  const eraseFrom = from + span * 0.9
+  const eraseTo = from + span * 0.96
+  const fadeOut: [number, number] = [from + span * 0.93, from + span * 0.99]
 
   const scaleX = useTransform(p, ramp([ruleIn[0], ruleIn[1]], [0, 1]))
   const chromeOut = useTransform(p, ramp([fadeOut[0], fadeOut[1]], [1, 0]))
@@ -238,9 +234,9 @@ function Tick({ p, index }: { p: MotionValue<number>; index: number }) {
 // three times and knows how it works — what they need is to be told the end is
 // coming, not told to scroll again.
 function ScrollHint({ p }: { p: MotionValue<number> }) {
-  const opacity = useTransform(p, ramp([0.12, 0.2, 0.86, 0.92], [0, 1, 1, 0]))
+  const opacity = useTransform(p, ramp([0.1, 0.17, 0.9, 0.95], [0, 1, 1, 0]))
   const [atEnd, setAtEnd] = useState(false)
-  useMotionValueEvent(p, 'change', (v) => setAtEnd(v > 0.77))
+  useMotionValueEvent(p, 'change', (v) => setAtEnd(v > 0.76))
 
   return (
     <motion.div
@@ -264,7 +260,7 @@ function ScrollHint({ p }: { p: MotionValue<number> }) {
 
 function Rail({ p }: { p: MotionValue<number> }) {
   // out before the melt reaches it — the ticks disappear on orange anyway
-  const opacity = useTransform(p, ramp([0.26, 0.33, 0.92, 0.97], [0, 1, 1, 0]))
+  const opacity = useTransform(p, ramp([0.14, 0.21, 0.9, 0.95], [0, 1, 1, 0]))
   return (
     <motion.div
       style={{ opacity }}
@@ -322,9 +318,9 @@ export default function Hero({ started }: { started: boolean }) {
 
   // — the portrait: entirely scroll-triggered. Absent at rest, fades up as you
   //   begin, holds, then clears out before the beats take the stage —
-  const figOpacity = useTransform(p, ramp([0.03, 0.11, 0.17, 0.22], [0, 1, 1, 0]))
-  const figY = useTransform(p, ramp([0.03, 0.11], [70, 0]))
-  const figScale = useTransform(p, ramp([0.03, 0.11, 0.22], [0.95, 1, 0.88]))
+  const figOpacity = useTransform(p, ramp([0.02, 0.08, 0.12, 0.16], [0, 1, 1, 0]))
+  const figY = useTransform(p, ramp([0.02, 0.08], [70, 0]))
+  const figScale = useTransform(p, ramp([0.02, 0.08, 0.16], [0.95, 1, 0.88]))
 
   // — the melt: starts under the closing beat, not after it —
   // (the melt maps its own 0.72→1 window internally, from the raw scroll value)
@@ -359,13 +355,14 @@ export default function Hero({ started }: { started: boolean }) {
     )
   }
 
-  // Taller on phones, not shorter. A wheel notch is ~100px, but a thumb flick
-  // is 600-800px — against the old 300vh wrapper (a 1624px scroll range on an
-  // 812px screen) one flick moved the journey ~40%, so beats 02 and 03
-  // appeared and vanished inside a single swipe. 460vh gives each beat roughly
-  // a flick of its own.
+  // Deliberately tall. The whole point of the journey is that each statement
+  // gets time — and since every phase (beats AND the melt) is a fraction of
+  // this one scroll range, the only way to slow the lava without cutting the
+  // reading time is to give the range more pixels. 760vh on phones (a thumb
+  // flick is 600-800px, so each beat is still more than a flick) and 640vh on
+  // desktop.
   return (
-    <section ref={wrapRef} id="hero" className="relative h-[560vh] md:h-[420vh]">
+    <section ref={wrapRef} id="hero" className="relative h-[760vh] md:h-[640vh]">
       <div ref={stageRef} className="sticky top-0 h-[100svh] overflow-hidden">
 
         {/* eyebrow */}

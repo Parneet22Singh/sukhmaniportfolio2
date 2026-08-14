@@ -363,13 +363,13 @@ export const podcasts = [
   {
     type: 'instagram' as const,
     url: 'https://www.instagram.com/reel/DO5a3ynEnl6/',
-    title: 'Reputation Management',
+    title: 'Smarter Moves',
     meta: 'Instagram cut',
   },
   {
     type: 'instagram' as const,
     url: 'https://www.instagram.com/reel/DQyTj4QkpB3/',
-    title: 'Brand Building',
+    title: 'Sharper Insights',
     meta: 'Instagram cut',
   },
 ]
@@ -391,7 +391,7 @@ export const filmSeries = [
     id: 'meri-wali-home-story',
     kicker: 'Series',
     title: 'Meri Wali Home Story',
-    blurb: 'A celebrity home-tour series, made when nobody could shoot on location.',
+    blurb: 'Branding activity around celebrity home tours and the stories behind building them.',
     // The playlist opens on videoseries, but a still is needed for the poster
     // and a playlist has no thumbnail of its own — this is its first episode.
     videoId: 'OtwvexpeESc',

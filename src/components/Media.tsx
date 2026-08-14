@@ -301,7 +301,7 @@ export default function Media() {
           >
             Stories in <span className="text-gold">motion.</span>
           </h2>
-          <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-5 md:gap-6">
+          <div className="grid sm:grid-cols-2 gap-5 md:gap-6 max-w-[820px]">
             {mediaReels.map((m, i) => (
               <Card key={i} m={m} i={0} progress={scrollYProgress} refFn={() => {}} pinned={false} />
             ))}
@@ -332,8 +332,11 @@ export default function Media() {
           Stories in motion - reels & showreels
         </motion.p>
 
+        {/* 2×2, not 3-wide: there are four reels, and a 3-column grid left one
+            stranded on its own row. A tight square block also gives the
+            constellation a cleaner target to resolve onto. */}
         <div className="absolute inset-x-0 top-[22vh] bottom-[8vh] flex items-center px-5 md:px-16">
-          <div className="w-full grid grid-cols-2 md:grid-cols-3 gap-4 md:gap-8 max-w-[1300px] mx-auto">
+          <div className="w-full grid grid-cols-2 gap-4 md:gap-8 max-w-[860px] mx-auto">
             {mediaReels.map((m, i) => (
               <Card
                 key={m.type === 'youtube' ? m.id : m.url}
