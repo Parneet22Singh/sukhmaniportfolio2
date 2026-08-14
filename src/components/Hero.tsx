@@ -416,19 +416,25 @@ export default function Hero({ started }: { started: boolean }) {
           </motion.div>
         </motion.div>
 
-        {/* portrait - scroll-triggered: absent at rest, arrives, then clears */}
+        {/* portrait - scroll-triggered: absent at rest, arrives, then clears.
+            The photo is nearly square (1216×1122, cropped at the waist), so on a
+            tall phone a height-driven, width-capped image only filled the lower
+            third of its box and read as hanging in mid-air. On mobile it is now
+            WIDTH-driven and runs edge to edge, so it fills the foot of the stage
+            and reads as grounded; desktop keeps the height-driven sizing. */}
         <div className="absolute inset-x-0 bottom-0 z-20 flex justify-center items-end pointer-events-none">
           <motion.div
+            className="md:ml-[4%]"
             style={{
-              transformOrigin: 'bottom center', marginLeft: '4%',
+              transformOrigin: 'bottom center',
               scale: figScale, opacity: figOpacity, y: figY,
             }}
           >
-            <div style={{ height: 'clamp(360px, 78vh, 760px)' }} className="flex items-end justify-center">
+            <div className="flex items-end justify-center h-auto md:h-[clamp(360px,78vh,760px)]">
               <img
                 src="/portrait.png"
                 alt={`${profile.name} - ${profile.title}`}
-                className="h-full w-auto max-w-[94vw] object-contain object-bottom"
+                className="w-screen max-w-none max-h-[68vh] h-auto object-contain object-bottom md:w-auto md:max-w-[94vw] md:max-h-none md:h-full"
                 /* on bone the heavy black drop-shadow read as grime; a light
                    contrast lift is all the portrait needs to sit on the page */
                 style={{ filter: 'grayscale(1) contrast(1.04)' }}
