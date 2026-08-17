@@ -10,6 +10,10 @@ lerna-debug.log*
 node_modules
 dist
 dist-ssr
+# vite.config.ts sets outDir to `build`, so this is the real output folder.
+# Vercel runs its own `npm run build`, so committing it only made every commit
+# carry a churn of renamed hashed bundles and hid the actual source changes.
+build
 *.local
 
 # Editor directories and files
