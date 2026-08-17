@@ -245,7 +245,7 @@ function ScrollHint({ p }: { p: MotionValue<number> }) {
       aria-hidden
     >
       <span className="label !text-[9px] !text-ink/45">{atEnd ? 'Almost there' : 'Keep scrolling'}</span>
-      {/* a bead running down a hairline, on a loop — the one thing on the
+      {/* a bead running down a hairline, on a loop - the one thing on the
           stage that moves without being scrolled, so it reads as an invitation */}
       <span className="relative block w-px h-12 bg-ink/15 overflow-hidden">
         <motion.span

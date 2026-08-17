@@ -4,6 +4,7 @@ import Preloader from './components/Preloader'
 import Hero from './components/Hero'
 import IntroStrip from './components/IntroStrip'
 import BottleneckTrack from './components/BottleneckTrack'
+import ImpactPreview from './components/ImpactPreview'
 import ExploreCards from './components/ExploreCards'
 import Contact from './components/Contact'
 
@@ -20,6 +21,8 @@ export default function Home() {
       <Hero started={started} />
       <IntroStrip />
       <BottleneckTrack />
+      {/* one chart, then the door to the rest of the numbers */}
+      <ImpactPreview />
       {/* the dismantling brain and the film work now have their own route,
           /media — the homepage links to it from the last card instead */}
       <ExploreCards />

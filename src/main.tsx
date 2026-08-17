@@ -22,6 +22,7 @@ const Approach = lazy(() => import('./pages/Approach'))
 const AboutPage = lazy(() => import('./pages/AboutPage'))
 const MediaPage = lazy(() => import('./pages/MediaPage'))
 const CampaignsPage = lazy(() => import('./pages/CampaignsPage'))
+const ImpactPage = lazy(() => import('./pages/ImpactPage'))
 
 
 // Buttery inertia scroll (lerp 0.1), disabled for reduced-motion users.
@@ -59,6 +60,7 @@ createRoot(document.getElementById('root')!).render(
             <Route path="/about" element={<AboutPage />} />
             <Route path="/media" element={<MediaPage />} />
             <Route path="/campaigns" element={<CampaignsPage />} />
+            <Route path="/impact" element={<ImpactPage />} />
             <Route path="/ooh-campaign" element={<OOHCampaign />} />
             <Route path="/parking-ticket" element={<ParkingTicket />} />
             <Route path="/mothers-day" element={<MothersDay />} />

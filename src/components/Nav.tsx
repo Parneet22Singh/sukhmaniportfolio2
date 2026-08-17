@@ -46,6 +46,7 @@ function Scramble({ text }: { text: string }) {
 const NAV = [
   { label: 'CAMPAIGNS', to: '/campaigns' },
   { label: 'CAPABILITIES', to: '/capabilities' },
+  { label: 'NUMBERS', to: '/impact' },
   { label: 'APPROACH', to: '/approach' },
   { label: 'MEDIA', to: '/media' },
   { label: 'ABOUT', to: '/about' },
